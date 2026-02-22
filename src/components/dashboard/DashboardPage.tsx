@@ -2,8 +2,9 @@ import {
   Users, Calendar, BedDouble, TrendingUp, TrendingDown,
   Activity, AlertCircle, CheckCircle2, Clock, Pill,
   CreditCard, HeartPulse, ArrowUpRight, ArrowDownRight,
-  Stethoscope, FlaskConical, Shield,
+  Stethoscope, FlaskConical, Shield, ArrowRight,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line,
@@ -42,6 +43,21 @@ const RECENT_PATIENTS = [
   { id: "P-2044", name: "James Hartwell",  age: 52, dept: "Emergency",   status: "Critical",    doctor: "Dr. Rivera", time: "09:41 AM" },
   { id: "P-2045", name: "Lin Wei",         age: 45, dept: "Radiology",   status: "Discharged",  doctor: "Dr. Smith",  time: "09:55 AM" },
   { id: "P-2046", name: "Fatima Al-Amin",  age: 61, dept: "Oncology",    status: "Admitted",    doctor: "Dr. Kumar",  time: "10:03 AM" },
+];
+
+const RECENT_APPOINTMENTS = [
+  { id: "A-1001", patient: "Sarah Mitchell", doctor: "Dr. Chen",   dept: "Cardiology",  time: "10:00 AM", status: "Scheduled" },
+  { id: "A-1002", patient: "Robert Kimani",  doctor: "Dr. Patel",  dept: "Orthopedics", time: "10:30 AM", status: "In Progress" },
+  { id: "A-1003", patient: "Aisha Nwosu",    doctor: "Dr. Osei",   dept: "Maternity",   time: "11:00 AM", status: "Completed" },
+  { id: "A-1004", patient: "James Hartwell", doctor: "Dr. Rivera", dept: "Emergency",   time: "11:15 AM", status: "Scheduled" },
+  { id: "A-1005", patient: "Lin Wei",        doctor: "Dr. Smith",  dept: "Radiology",   time: "11:45 AM", status: "Cancelled" },
+];
+
+const QUICK_ACTIONS = [
+  { label: "View Patients",     icon: Users,      path: "/patients",         color: "gradient-primary" },
+  { label: "Appointments",      icon: Calendar,   path: "/appointments",     color: "bg-secondary" },
+  { label: "Billing & Payments",icon: CreditCard, path: "/finance/billing",  color: "bg-success" },
+  { label: "Staff Directory",   icon: Stethoscope,path: "/admin/staff",      color: "bg-warning" },
 ];
 
 const ALERTS = [
@@ -97,6 +113,17 @@ function StatusBadge({ status }: { status: string }) {
   return <span className={map[status] ?? "badge-neutral"}>{status}</span>;
 }
 
+/* ── Appointment Status Badge ── */
+function AppointmentBadge({ status }: { status: string }) {
+  const map: Record<string, string> = {
+    Scheduled:     "badge-info",
+    "In Progress": "badge-warning",
+    Completed:     "badge-success",
+    Cancelled:     "badge-danger",
+  };
+  return <span className={map[status] ?? "badge-neutral"}>{status}</span>;
+}
+
 /* ── Custom Tooltip ── */
 function ChartTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
@@ -114,6 +141,7 @@ function ChartTooltip({ active, payload, label }: any) {
 
 /* ── Dashboard ── */
 export function DashboardPage() {
+  const navigate = useNavigate();
   return (
     <div className="space-y-6 pb-4">
 
@@ -327,6 +355,59 @@ export function DashboardPage() {
         </ResponsiveContainer>
       </div>
 
+      {/* Quick Actions */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {QUICK_ACTIONS.map((a) => (
+          <button
+            key={a.path}
+            onClick={() => navigate(a.path)}
+            className="stat-card flex items-center gap-3 hover:border-primary/30 transition-all group cursor-pointer"
+          >
+            <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${a.color}`}>
+              <a.icon className="h-5 w-5 text-primary-foreground" />
+            </div>
+            <div className="text-left flex-1">
+              <p className="text-sm font-semibold text-foreground">{a.label}</p>
+            </div>
+            <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+          </button>
+        ))}
+      </div>
+
+      {/* Recent Appointments */}
+      <div className="stat-card overflow-hidden p-0">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+          <div>
+            <p className="text-sm font-semibold text-foreground">Upcoming Appointments</p>
+            <p className="text-xs text-muted-foreground">Today's scheduled appointments</p>
+          </div>
+          <button onClick={() => navigate("/appointments")} className="text-xs font-medium text-primary hover:underline">View all →</button>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                {["ID", "Patient", "Doctor", "Department", "Time", "Status"].map((h) => (
+                  <th key={h} className="text-left text-xs font-semibold text-muted-foreground px-5 py-3 whitespace-nowrap">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {RECENT_APPOINTMENTS.map((a) => (
+                <tr key={a.id} className="hover:bg-muted/20 transition-colors cursor-pointer">
+                  <td className="px-5 py-3 text-xs font-mono font-medium text-primary">{a.id}</td>
+                  <td className="px-5 py-3 text-sm font-medium text-foreground whitespace-nowrap">{a.patient}</td>
+                  <td className="px-5 py-3 text-sm text-muted-foreground whitespace-nowrap">{a.doctor}</td>
+                  <td className="px-5 py-3 text-sm text-muted-foreground whitespace-nowrap">{a.dept}</td>
+                  <td className="px-5 py-3 text-xs text-muted-foreground">{a.time}</td>
+                  <td className="px-5 py-3"><AppointmentBadge status={a.status} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       {/* Recent Patients Table */}
       <div className="stat-card overflow-hidden p-0">
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
@@ -334,7 +415,7 @@ export function DashboardPage() {
             <p className="text-sm font-semibold text-foreground">Recent Patient Activity</p>
             <p className="text-xs text-muted-foreground">Today's latest admissions and visits</p>
           </div>
-          <button className="text-xs font-medium text-primary hover:underline">View all →</button>
+          <button onClick={() => navigate("/patients")} className="text-xs font-medium text-primary hover:underline">View all →</button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
