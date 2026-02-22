@@ -17,6 +17,7 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { PatientProfileSheet } from "./PatientProfileSheet";
 
 /* ── Mock data ── */
 type Patient = {
@@ -86,6 +87,7 @@ export function PatientsPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [departmentFilter, setDepartmentFilter] = useState<string>("all");
   const [page, setPage] = useState(1);
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
 
   const departments = useMemo(
     () => Array.from(new Set(PATIENTS.map((p) => p.department))).sort(),
@@ -240,7 +242,7 @@ export function PatientsPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem>View Profile</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setSelectedPatient(p)}>View Profile</DropdownMenuItem>
                         <DropdownMenuItem>Edit Details</DropdownMenuItem>
                         <DropdownMenuItem>View EHR</DropdownMenuItem>
                         <DropdownMenuItem className="text-destructive">Deactivate</DropdownMenuItem>
@@ -289,6 +291,12 @@ export function PatientsPage() {
           </div>
         </div>
       </div>
+
+      <PatientProfileSheet
+        patient={selectedPatient}
+        open={!!selectedPatient}
+        onOpenChange={(open) => { if (!open) setSelectedPatient(null); }}
+      />
     </div>
   );
 }
