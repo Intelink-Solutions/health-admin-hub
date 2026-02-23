@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Bell, Search, Settings, Menu, ChevronDown, Wifi, WifiOff } from "lucide-react";
+import { Bell, Search, Settings, Menu, ChevronDown, Wifi } from "lucide-react";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { cn } from "@/lib/utils";
 
 interface TopBarProps {
@@ -107,6 +108,9 @@ export function TopBar({ onMenuToggle }: TopBarProps) {
           </div>
         )}
       </div>
+
+      {/* Theme toggle */}
+      <ThemeToggle />
 
       {/* Settings */}
       <button className="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
