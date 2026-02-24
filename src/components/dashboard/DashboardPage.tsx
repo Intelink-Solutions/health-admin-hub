@@ -149,7 +149,7 @@ export function DashboardPage() {
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-xl font-bold text-foreground">Hospital Dashboard</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Real-time overview — General Hospital, Lagos</p>
+          <p className="text-sm text-muted-foreground mt-0.5">Real-time overview — BesaPlus: Univeral Solution</p>
         </div>
         <div className="flex items-center gap-2">
           <span className="badge-success flex items-center gap-1.5 px-3 py-1.5 text-xs">

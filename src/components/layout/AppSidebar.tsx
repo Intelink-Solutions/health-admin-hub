@@ -38,9 +38,9 @@ const NAV_SECTIONS: NavSection[] = [
       { label: "Dashboard",            path: "/",             icon: LayoutDashboard },
       { label: "Patients",             path: "/patients",     icon: Users },
       { label: "Appointments",         path: "/appointments", icon: Calendar },
-      { label: "Admissions & Discharge", path: "/adt",        icon: BedDouble },
-      { label: "EHR / EMR",            path: "/ehr",          icon: FileText },
-      { label: "Wards & Clinics",      path: "/wards",        icon: Building2 },
+      { label: "Admissions & Discharge", path: "/hospital/admissions",        icon: BedDouble },
+      { label: "EHR / EMR",            path: "/hospital/ehr",          icon: FileText },
+      { label: "Wards & Clinics",      path: "/hospital/wards",        icon: Building2 },
     ],
   },
   {
@@ -61,10 +61,10 @@ const NAV_SECTIONS: NavSection[] = [
     icon: FlaskConical,
     color: "text-purple-400",
     items: [
-      { label: "Test Requests",    path: "/lab/requests",  icon: ClipboardList },
-      { label: "Sample Collection", path: "/lab/samples",  icon: Microscope },
-      { label: "Lab Results",      path: "/lab/results",   icon: BarChart3 },
-      { label: "Imaging & Reports", path: "/lab/imaging",  icon: ImageIcon },
+      { label: "Lab Tests",    path: "/laboratory/tests",  icon: ClipboardList },
+      { label: "Sample Collection", path: "/laboratory/tests",  icon: Microscope },
+      { label: "Lab Results",      path: "/laboratory/tests",   icon: BarChart3 },
+      { label: "Imaging & Reports", path: "/laboratory/radiology",  icon: ImageIcon },
     ],
   },
   {
@@ -109,10 +109,8 @@ const NAV_SECTIONS: NavSection[] = [
     icon: Video,
     color: "text-cyan-400",
     items: [
-      { label: "Virtual Consultations", path: "/tele/consultations", icon: Video },
-      { label: "Chat / Audio / Video",  path: "/tele/sessions",      icon: MessageSquare },
-      { label: "Home Visit Requests",   path: "/tele/home-visits",   icon: Home },
-      { label: "Caregiver Assignments", path: "/tele/caregivers",    icon: Heart },
+      { label: "Virtual Consultations", path: "/telemedicine/consultations", icon: Video },
+      { label: "Home Visits",  path: "/telemedicine/home-visits",      icon: Home },
     ],
   },
   {
@@ -121,9 +119,8 @@ const NAV_SECTIONS: NavSection[] = [
     icon: Store,
     color: "text-orange-400",
     items: [
-      { label: "Online Bookings",    path: "/ecom/bookings",      icon: Calendar },
-      { label: "Service Listings",   path: "/ecom/services",      icon: Store },
-      { label: "Orders & Transactions", path: "/ecom/orders",     icon: ShoppingBag },
+      { label: "Online Bookings",    path: "/ecommerce/bookings",      icon: Calendar },
+      { label: "Service Listings",   path: "/ecommerce/services",      icon: Store },
     ],
   },
   {
@@ -132,10 +129,8 @@ const NAV_SECTIONS: NavSection[] = [
     icon: PieChart,
     color: "text-emerald-400",
     items: [
-      { label: "Dashboards",         path: "/analytics/overview",  icon: LayoutDashboard },
-      { label: "Clinical Reports",   path: "/analytics/clinical",  icon: FileText },
-      { label: "Financial Analytics", path: "/analytics/finance",  icon: BarChart3 },
-      { label: "Usage Insights",     path: "/analytics/usage",     icon: TrendingUp },
+      { label: "Dashboard",         path: "/analytics/dashboard",  icon: LayoutDashboard },
+      { label: "Clinical Reports",   path: "/analytics/clinical-reports",  icon: FileText },
     ],
   },
   {
@@ -144,10 +139,7 @@ const NAV_SECTIONS: NavSection[] = [
     icon: Lock,
     color: "text-red-400",
     items: [
-      { label: "User Roles",   path: "/security/roles",    icon: KeyRound },
-      { label: "Permissions",  path: "/security/permissions", icon: Shield },
-      { label: "Audit Logs",   path: "/security/audit",    icon: Eye },
-      { label: "Login History", path: "/security/history", icon: History },
+      { label: "Access Control",   path: "/security", icon: KeyRound },
     ],
   },
 ];
@@ -236,8 +228,8 @@ export function AppSidebar({ collapsed, onClose }: AppSidebarProps) {
             <AlertCircle className="h-4.5 w-4.5 text-white" strokeWidth={2.5} />
           </div>
           <div className="leading-tight">
-            <p className="text-xs font-bold text-sidebar-primary-foreground tracking-tight">IDHCMS</p>
-            <p className="text-[10px] text-sidebar-muted-foreground">Health Admin</p>
+            <p className="text-xs font-bold text-sidebar-primary-foreground tracking-tight">BesaPlus</p>
+            <p className="text-[10px] text-sidebar-muted-foreground">Universal Solution</p>
           </div>
         </div>
         {onClose && (
@@ -269,7 +261,7 @@ export function AppSidebar({ collapsed, onClose }: AppSidebarProps) {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-xs font-semibold text-sidebar-foreground truncate">Super Admin</p>
-            <p className="text-[10px] text-sidebar-muted-foreground truncate">admin@idhcms.health</p>
+            <p className="text-[10px] text-sidebar-muted-foreground truncate">admin@besaplus.health</p>
           </div>
         </div>
       </div>

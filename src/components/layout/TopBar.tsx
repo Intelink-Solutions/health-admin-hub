@@ -137,7 +137,7 @@ export function TopBar({ onMenuToggle }: TopBarProps) {
           <div className="absolute right-0 top-full mt-2 w-56 bg-card border border-border rounded-xl shadow-card-lg z-50 animate-fade-in overflow-hidden">
             <div className="px-4 py-3 border-b border-border">
               <p className="text-sm font-semibold text-foreground">Super Admin</p>
-              <p className="text-xs text-muted-foreground">admin@idhcms.health</p>
+              <p className="text-xs text-muted-foreground">admin@besaplus.health</p>
             </div>
             {[
               "My Profile", "Account Settings", "Security", "Help & Support"
