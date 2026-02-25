@@ -170,6 +170,15 @@
 @layer utilities {
   .text-balance { text-wrap: balance; }
 
+  /* Hide scrollbar */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Glass morphism card */
   .glass-card {
     background: hsl(0 0% 100% / 0.7);

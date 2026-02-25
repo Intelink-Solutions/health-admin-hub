@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Bell, Search, Settings, Menu, ChevronDown, Wifi } from "lucide-react";
+import { Bell, Search, Settings, Menu, ChevronDown, Wifi, ExternalLink } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +19,7 @@ export function TopBar({ onMenuToggle }: TopBarProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
+  const navigate = useNavigate();
 
   const now = new Date();
   const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -111,6 +113,15 @@ export function TopBar({ onMenuToggle }: TopBarProps) {
 
       {/* Theme toggle */}
       <ThemeToggle />
+
+      {/* Redirect to user website */}
+      <button
+        onClick={() => navigate("/home")}
+        className="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+        title="Go to User Website"
+      >
+        <ExternalLink className="h-5 w-5" />
+      </button>
 
       {/* Settings */}
       <button className="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">

@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { User, Mail, Lock, Phone, ArrowRight, AlertCircle, CheckCircle2 } from "lucide-react";
 
 type RegisterStep = "role" | "info" | "contact" | "success";
 type UserRole = "patient" | "provider";
 
 export function RegisterPage() {
+  const navigate = useNavigate();
   const [step, setStep] = useState<RegisterStep>("role");
   const [role, setRole] = useState<UserRole | null>(null);
   const [fullName, setFullName] = useState("");
@@ -54,19 +56,19 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-teal-600 flex items-center justify-center mx-auto mb-4">
             <span className="text-white text-xl font-bold">BP</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Create Account</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Create Account</h1>
           <p className="text-sm text-gray-600 mt-1">Join BesaPlus Healthcare</p>
         </div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-8">
+        <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
           {/* Step Indicator */}
           {step !== "role" && step !== "success" && (
             <div className="flex justify-between mb-8">
@@ -81,7 +83,7 @@ export function RegisterPage() {
               <h2 className="text-xl font-bold text-gray-900 mb-6">I am a...</h2>
               <button
                 onClick={() => handleRoleSelect("patient")}
-                className="w-full p-6 border-2 border-gray-300 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition text-left"
+                className="w-full p-4 sm:p-6 border-2 border-gray-300 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition text-left"
               >
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
@@ -96,7 +98,7 @@ export function RegisterPage() {
 
               <button
                 onClick={() => handleRoleSelect("provider")}
-                className="w-full p-6 border-2 border-gray-300 rounded-xl hover:border-teal-600 hover:bg-teal-50 transition text-left"
+                className="w-full p-4 sm:p-6 border-2 border-gray-300 rounded-xl hover:border-teal-600 hover:bg-teal-50 transition text-left"
               >
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-lg bg-teal-100 flex items-center justify-center shrink-0">
@@ -125,7 +127,10 @@ export function RegisterPage() {
                   {role === "provider" ? "Your provider account is under review. We'll notify you soon." : "Welcome to BesaPlus. Start booking now!"}
                 </p>
               </div>
-              <button className="w-full py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition">
+              <button
+                className="w-full py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition"
+                onClick={() => navigate(role === "provider" ? "/provider/dashboard" : "/discover/doctors")}
+              >
                 {role === "provider" ? "Go to Dashboard" : "Find Doctors & Book"}
               </button>
             </div>

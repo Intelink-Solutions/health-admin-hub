@@ -35,7 +35,7 @@ const NAV_SECTIONS: NavSection[] = [
     icon: Hospital,
     color: "text-blue-400",
     items: [
-      { label: "Dashboard",            path: "/",             icon: LayoutDashboard },
+      { label: "Dashboard",            path: "/admin/dashboard",             icon: LayoutDashboard },
       { label: "Patients",             path: "/patients",     icon: Users },
       { label: "Appointments",         path: "/appointments", icon: Calendar },
       { label: "Admissions & Discharge", path: "/hospital/admissions",        icon: BedDouble },

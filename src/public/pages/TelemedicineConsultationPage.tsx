@@ -11,7 +11,7 @@ interface Message {
 export function TelemedicineConsultationPage() {
   const [isMuted, setIsMuted] = useState(false);
   const [isCameraOff, setIsCameraOff] = useState(false);
-  const [showChat, setShowChat] = useState(true);
+  const [showChat, setShowChat] = useState(false);
   const [showPrescription, setShowPrescription] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { id: 1, sender: "doctor", text: "Hello! How are you feeling today?", time: "2:15 PM" },
@@ -37,88 +37,92 @@ export function TelemedicineConsultationPage() {
   };
 
   return (
-    <div className="h-screen bg-black flex">
+    <div className="h-screen bg-black flex flex-col md:flex-row">
       {/* Main Video Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-h-0">
         {/* Doctor Video */}
-        <div className="flex-1 bg-gradient-to-br from-gray-800 to-black relative overflow-hidden flex items-center justify-center">
+        <div className="flex-1 bg-gradient-to-br from-gray-800 to-black relative overflow-hidden flex items-center justify-center min-h-0">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-teal-600/10 opacity-50"></div>
 
           {/* Placeholder for Doctor Video */}
-          <div className="relative z-10 text-center">
-            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center mx-auto mb-6">
-              <span className="text-white text-5xl">👨‍⚕️</span>
+          <div className="relative z-10 text-center px-4 md:px-0">
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center mx-auto mb-4 md:mb-6">
+              <span className="text-white text-3xl md:text-5xl">👨‍⚕️</span>
             </div>
-            <h2 className="text-white text-2xl font-bold">Dr. Sarah Johnson</h2>
-            <p className="text-gray-300">Connected</p>
+            <h2 className="text-white text-xl md:text-2xl font-bold">Dr. Sarah Johnson</h2>
+            <p className="text-gray-300 text-sm md:text-base">Connected</p>
           </div>
 
           {/* Top Right - Your Video */}
-          <div className="absolute top-4 right-4 w-32 h-32 bg-gray-700 rounded-lg overflow-hidden border-2 border-blue-500">
+          <div className="absolute top-2 right-2 md:top-4 md:right-4 w-20 h-20 md:w-32 md:h-32 bg-gray-700 rounded-lg overflow-hidden border-2 border-blue-500">
             <div className="w-full h-full flex items-center justify-center bg-gray-600">
-              <span className="text-white text-2xl">🧑‍🔬</span>
+              <span className="text-white text-lg md:text-2xl">🧑‍🔬</span>
             </div>
           </div>
 
           {/* Top Left - Consultation Info */}
-          <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-lg flex items-center gap-2 text-white">
-            <Clock className="w-4 h-4" />
-            <span className="text-sm font-medium">{consultationTime} mins remaining</span>
+          <div className="absolute top-2 left-2 md:top-4 md:left-4 bg-black/50 backdrop-blur-sm px-2 md:px-4 py-1 md:py-2 rounded-lg flex items-center gap-2 text-white text-xs md:text-sm">
+            <Clock className="w-3 h-3 md:w-4 md:h-4" />
+            <span className="font-medium">{consultationTime}m</span>
           </div>
         </div>
 
         {/* Control Bar */}
-        <div className="bg-gradient-to-t from-black to-gray-900 border-t border-gray-700 px-6 py-4">
-          <div className="flex items-center justify-center gap-4">
+        <div className="bg-gradient-to-t from-black to-gray-900 border-t border-gray-700 px-3 md:px-6 py-2 md:py-4 overflow-x-auto md:overflow-x-visible">
+          <div className="flex items-center justify-center gap-2 md:gap-4 min-w-min md:min-w-0">
             {/* Microphone */}
             <button
               onClick={() => setIsMuted(!isMuted)}
-              className={`p-4 rounded-full transition ${
+              className={`p-2 md:p-4 rounded-full transition flex-shrink-0 ${
                 isMuted
                   ? "bg-red-600 hover:bg-red-700 text-white"
                   : "bg-gray-700 hover:bg-gray-600 text-white"
               }`}
+              title={isMuted ? "Unmute" : "Mute"}
             >
-              {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+              {isMuted ? <MicOff className="w-4 h-4 md:w-6 md:h-6" /> : <Mic className="w-4 h-4 md:w-6 md:h-6" />}
             </button>
 
             {/* Camera */}
             <button
               onClick={() => setIsCameraOff(!isCameraOff)}
-              className={`p-4 rounded-full transition ${
+              className={`p-2 md:p-4 rounded-full transition flex-shrink-0 ${
                 isCameraOff
                   ? "bg-red-600 hover:bg-red-700 text-white"
                   : "bg-gray-700 hover:bg-gray-600 text-white"
               }`}
+              title={isCameraOff ? "Turn on camera" : "Turn off camera"}
             >
-              {isCameraOff ? <VideoOff className="w-6 h-6" /> : <Video className="w-6 h-6" />}
+              {isCameraOff ? <VideoOff className="w-4 h-4 md:w-6 md:h-6" /> : <Video className="w-4 h-4 md:w-6 md:h-6" />}
             </button>
 
             {/* Screen Share */}
-            <button className="p-4 rounded-full bg-gray-700 hover:bg-gray-600 text-white transition">
-              <Monitor className="w-6 h-6" />
+            <button className="p-2 md:p-4 rounded-full bg-gray-700 hover:bg-gray-600 text-white transition flex-shrink-0" title="Share screen">
+              <Monitor className="w-4 h-4 md:w-6 md:h-6" />
             </button>
 
             {/* Chat Toggle */}
             <button
               onClick={() => setShowChat(!showChat)}
-              className={`p-4 rounded-full transition ${
+              className={`p-2 md:p-4 rounded-full transition flex-shrink-0 relative ${
                 showChat
                   ? "bg-blue-600 text-white"
                   : "bg-gray-700 hover:bg-gray-600 text-white"
               }`}
+              title="Toggle chat"
             >
-              <MessageCircle className="w-6 h-6" />
+              <MessageCircle className="w-4 h-4 md:w-6 md:h-6" />
+              {messages.length > 0 && !showChat && <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-xs font-bold">{messages.length}</span>}
             </button>
 
             {/* End Call */}
-            <button className="p-4 rounded-full bg-red-600 hover:bg-red-700 text-white transition">
-              <Phone className="w-6 h-6" />
+            <button className="p-2 md:p-4 rounded-full bg-red-600 hover:bg-red-700 text-white transition flex-shrink-0" title="End call">
+              <Phone className="w-4 h-4 md:w-6 md:h-6" />
             </button>
           </div>
 
           {/* Subtitle */}
-          <div className="text-center mt-4 text-gray-400 text-sm">
+          <div className="text-center mt-2 md:mt-4 text-gray-400 text-xs md:text-sm">
             {isMuted && "📍 Microphone is muted"}
             {isCameraOff && " • Camera is off"}
           </div>
@@ -127,7 +131,7 @@ export function TelemedicineConsultationPage() {
 
       {/* Right Sidebar - Chat & Prescription */}
       {showChat && (
-        <div className="w-80 bg-gray-900 border-l border-gray-700 flex flex-col">
+        <div className="w-full md:w-80 bg-gray-900 border-t md:border-t-0 md:border-l border-gray-700 flex flex-col max-h-96 md:max-h-screen">
           {/* Tabs */}
           <div className="flex border-b border-gray-700">
             <button

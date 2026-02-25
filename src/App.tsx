@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/context/AuthContext";
 import PublicLayout from "@/components/layout/PublicLayout";
@@ -49,6 +49,10 @@ import { TelemedicineConsultationPage } from "./public/pages/TelemedicineConsult
 import { PatientDashboardPage } from "./public/pages/PatientDashboardPage";
 import { EcommerceServicesPage } from "./public/pages/EcommerceServicesPage";
 import { ProviderDashboardPage } from "./public/pages/ProviderDashboardPage";
+import { ChatPage } from "./public/pages/ChatPage";
+import { ProviderServicesFormPage } from "./public/pages/ProviderServicesFormPage";
+import { ProviderSettingsPage } from "./public/pages/ProviderSettingsPage";
+import { UserSettingsPage } from "./public/pages/UserSettingsPage";
 
 const queryClient = new QueryClient();
 
@@ -72,9 +76,14 @@ const App = () => (
               <Route path="/user/dashboard" element={<PublicLayout><PatientDashboardPage /></PublicLayout>} />
               <Route path="/marketplace/services" element={<PublicLayout><EcommerceServicesPage /></PublicLayout>} />
               <Route path="/provider/dashboard" element={<PublicLayout><ProviderDashboardPage /></PublicLayout>} />
+              <Route path="/chat" element={<PublicLayout><ChatPage /></PublicLayout>} />
+              <Route path="/provider/services" element={<PublicLayout><ProviderServicesFormPage /></PublicLayout>} />
+              <Route path="/provider/settings" element={<PublicLayout><ProviderSettingsPage /></PublicLayout>} />
+              <Route path="/user/settings" element={<PublicLayout><UserSettingsPage /></PublicLayout>} />
 
           {/* Admin Pages */}
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/admin/dashboard" element={<Index />} />
           <Route path="/patients" element={<Patients />} />
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/finance/billing" element={<Billing />} />

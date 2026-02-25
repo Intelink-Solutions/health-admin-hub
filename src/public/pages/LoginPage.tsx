@@ -12,6 +12,7 @@ export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loginRole, setLoginRole] = useState<"patient" | "provider" | "admin">("patient");
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -53,12 +54,18 @@ export function LoginPage() {
       };
 
       login(newUser);
+      setLoginRole(role);
       setStep("success");
     }, 1200);
   };
 
-  const handleQuickLogin = (role: "patient" | "provider") => {
-    const testEmail = role === "provider" ? "dr.sarah@hospital.com" : "john.patient@email.com";
+  const handleQuickLogin = (role: "patient" | "provider" | "admin") => {
+    const testEmail =
+      role === "provider"
+        ? "dr.sarah@hospital.com"
+        : role === "admin"
+        ? "admin@besaplus.com"
+        : "john.patient@email.com";
     setEmail(testEmail);
     setPassword("password123");
     setLoading(true);
@@ -70,29 +77,33 @@ export function LoginPage() {
       const newUser = {
         id: Math.random().toString(36).substr(2, 9),
         email: testEmail,
-        name: role === "provider" ? "Dr. Sarah Johnson" : "John Doe",
+        name: role === "provider" ? "Dr. Sarah Johnson" : role === "admin" ? "Admin User" : "John Doe",
         role,
       };
 
       login(newUser);
+      setLoginRole(role);
       setStep("success");
     }, 1200);
   };
 
+  const dashboardPath = loginRole === "provider" ? "/provider/dashboard" : loginRole === "admin" ? "/admin/dashboard" : "/user/dashboard";
+  const dashboardLabel = loginRole === "provider" ? "Go to Provider Dashboard" : loginRole === "admin" ? "Go to Admin Dashboard" : "Go to Dashboard";
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-teal-600 flex items-center justify-center mx-auto mb-4">
             <span className="text-white text-xl font-bold">BP</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">BesaPlus</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">BesaPlus</h1>
           <p className="text-sm text-gray-600 mt-1">Universal Healthcare Solution</p>
         </div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-8">
+        <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
           {step === "success" ? (
             <div className="text-center space-y-6">
               <div className="mx-auto w-16 h-16 rounded-full bg-green-100 flex items-center justify-center animate-bounce">
@@ -102,11 +113,11 @@ export function LoginPage() {
                 <h2 className="text-xl font-bold text-gray-900">Welcome back!</h2>
                 <p className="text-sm text-gray-600 mt-2">You're logged in successfully. Redirecting...</p>
               </div>
-              <button 
-                onClick={() => navigate("/user/dashboard")}
+              <button
+                onClick={() => navigate(dashboardPath)}
                 className="w-full py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition active:scale-95"
               >
-                Go to Dashboard
+                {dashboardLabel}
               </button>
             </div>
           ) : (
@@ -203,7 +214,7 @@ export function LoginPage() {
               {/* Quick Login Section */}
               <div className="space-y-2">
                 <p className="text-xs text-gray-500 text-center font-medium">Quick Login (Demo)</p>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   <button 
                     type="button"
                     onClick={() => handleQuickLogin("patient")}
@@ -221,6 +232,15 @@ export function LoginPage() {
                   >
                     <Zap className="w-4 h-4" />
                     <span>Provider</span>
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => handleQuickLogin("admin")}
+                    disabled={loading}
+                    className="py-2 px-3 border-2 border-slate-500 bg-slate-50 rounded-lg font-medium text-sm text-slate-700 hover:bg-slate-100 transition active:scale-95 flex items-center justify-center gap-1 disabled:opacity-50"
+                  >
+                    <Zap className="w-4 h-4" />
+                    <span>Admin</span>
                   </button>
                 </div>
               </div>
