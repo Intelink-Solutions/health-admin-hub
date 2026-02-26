@@ -63,7 +63,7 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <BrowserRouter>
+          <BrowserRouter basename="/health-admin-hub">
             <Routes>
               {/* Public Pages with Mobile Navigation */}
               <Route path="/home" element={<PublicLayout><HomePage /></PublicLayout>} />
