@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Calendar, MessageCircle, FileText, ShoppingCart, History, Settings, LogOut, Bell, User, ChevronRight, Clock, MapPin, UserCircle, Menu, X, Home, Video } from "lucide-react";
 import { BookingFormModal } from "@/components/BookingFormModal";
 import { useAuth } from "@/context/AuthContext";
@@ -22,6 +22,8 @@ interface Message {
   time: string;
   unread: number;
 }
+
+type PatientDashboardTab = "appointments" | "messages" | "prescriptions" | "orders";
 
 const sampleAppointments: Appointment[] = [
   {
@@ -81,11 +83,28 @@ const sampleMessages: Message[] = [
 
 export function PatientDashboardPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { logout } = useAuth();
-  const [activeTab, setActiveTab] = useState<"appointments" | "messages" | "prescriptions" | "orders">("appointments");
+  const getTabFromSearch = (search: string): PatientDashboardTab => {
+    const tabParam = new URLSearchParams(search).get("tab");
+    if (tabParam === "messages" || tabParam === "prescriptions" || tabParam === "orders") {
+      return tabParam;
+    }
+    return "appointments";
+  };
+
+  const [activeTab, setActiveTab] = useState<PatientDashboardTab>(
+    getTabFromSearch(location.search)
+  );
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showBookModal, setShowBookModal] = useState(false);
+
+  useEffect(() => {
+    if (location.pathname === "/user/dashboard") {
+      setActiveTab(getTabFromSearch(location.search));
+    }
+  }, [location.pathname, location.search]);
 
   const sideNavItems = [
     { id: "home", label: "Home", icon: Home, path: "/home" },
@@ -104,20 +123,27 @@ export function PatientDashboardPage() {
     { id: "menu", label: "Menu", icon: Menu, onClick: () => setSidebarOpen(true) },
   ];
 
+  const dashboardTabs: Array<{ id: PatientDashboardTab; label: string; icon: typeof Calendar }> = [
+    { id: "appointments", label: "Appointments", icon: Calendar },
+    { id: "messages", label: "Messages", icon: MessageCircle },
+    { id: "prescriptions", label: "Prescriptions", icon: FileText },
+    { id: "orders", label: "Orders", icon: ShoppingCart },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex overflow-x-hidden transition-colors duration-300">
       {/* Side Navigation */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 lg:translate-x-0 lg:static flex flex-col h-screen ${
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 transform transition-transform duration-300 lg:translate-x-0 lg:static flex flex-col h-screen ${
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       }`}>
-        <div className="h-16 flex items-center justify-between px-4 border-b border-gray-200">
+        <div className="h-16 flex items-center justify-between px-4 border-b border-gray-200 dark:border-slate-800">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-teal-600 flex items-center justify-center">
               <span className="text-white text-sm font-bold">BP</span>
             </div>
-            <span className="text-lg font-bold text-gray-900">User</span>
+            <span className="text-lg font-bold text-gray-900 dark:text-white">User</span>
           </div>
-          <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-1 text-gray-500 hover:text-gray-700">
+          <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-1 text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-white">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -125,12 +151,17 @@ export function PatientDashboardPage() {
         <nav className="p-4 space-y-1 flex-1 overflow-y-auto scrollbar-hide">
           {sideNavItems.map((item) => {
             const Icon = item.icon;
-            const isActive = item.tab ? activeTab === item.tab : false;
+            const isActive = item.tab
+              ? location.pathname === "/user/dashboard" && activeTab === item.tab
+              : item.path
+              ? location.pathname === item.path
+              : false;
             return (
               <button
                 key={item.id}
                 onClick={() => {
                   if (item.tab) {
+                    navigate(`/user/dashboard?tab=${item.tab}`);
                     setActiveTab(item.tab);
                   }
                   if (item.path) {
@@ -139,7 +170,9 @@ export function PatientDashboardPage() {
                   setSidebarOpen(false);
                 }}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${
-                  isActive ? "bg-blue-50 text-blue-700 font-medium" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  isActive
+                    ? "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-medium"
+                    : "text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white"
                 }`}
               >
                 <Icon className="w-5 h-5" />
@@ -149,9 +182,9 @@ export function PatientDashboardPage() {
           })}
         </nav>
 
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-gray-200 dark:border-slate-800">
           <button
-            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition"
+            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition"
             onClick={() => {
               logout();
               navigate("/login");
@@ -167,88 +200,83 @@ export function PatientDashboardPage() {
         <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
-          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 text-gray-600 hover:text-gray-900">
+        <header className="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 sticky top-0 z-30">
+          <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+              <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-1.5 sm:p-2 text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white shrink-0">
                 <Menu className="w-5 h-5" />
               </button>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-teal-600 flex items-center justify-center">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-blue-600 to-teal-600 flex items-center justify-center shrink-0">
                   <span className="text-white text-sm font-bold">BP</span>
                 </div>
-                <span className="text-base sm:text-lg font-bold text-gray-900">BesaPlus Dashboard</span>
+                <span className="text-sm sm:text-lg font-bold text-gray-900 dark:text-white truncate">BesaPlus</span>
               </div>
             </div>
-            <div className="flex items-center gap-2 sm:gap-4">
-              <button className="relative p-2 text-gray-600 hover:text-gray-900">
-                <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
+            <div className="flex items-center gap-1 sm:gap-3 shrink-0">
+              <button className="relative p-1.5 sm:p-2 text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white">
+                <Bell className="w-5 h-5" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-600 rounded-full"></span>
               </button>
               <button
-                className="p-2 text-gray-600 hover:text-gray-900"
+                className="p-1.5 sm:p-2 text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white"
                 onClick={() => navigate("/user/settings")}
               >
-                <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
+                <Settings className="w-5 h-5" />
               </button>
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                <User className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+              <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-700 items-center justify-center hidden sm:flex">
+                <User className="w-5 h-5 text-blue-600" />
               </div>
             </div>
           </div>
         </header>
 
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 lg:pb-8">
+        <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-3 sm:py-8 pb-24 lg:pb-8">
         {/* Welcome Card */}
-          <div className="mb-6 sm:mb-8 bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg sm:rounded-xl p-4 sm:p-8 text-white">
-            <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Welcome back, John!</h1>
-            <p className="text-sm sm:text-base text-blue-100">You have 1 appointment today at 2:00 PM</p>
+          <div className="mb-4 sm:mb-8 bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg sm:rounded-xl p-3 sm:p-8 text-white">
+            <h1 className="text-xl sm:text-3xl font-bold mb-1 sm:mb-2">Welcome back, John!</h1>
+            <p className="text-xs sm:text-base text-blue-100">You have 1 appointment today at 2:00 PM</p>
         </div>
 
         {/* Quick Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
-            <div className="bg-white rounded-lg p-4 border border-gray-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-5 sm:mb-8">
+            <div className="bg-white dark:bg-slate-900 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-slate-800">
               <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600 mb-2" />
-              <p className="text-xs sm:text-sm text-gray-600">Next Appointment</p>
-              <p className="text-sm sm:text-lg font-bold text-gray-900">Today, 2:00 PM</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-400">Next Appointment</p>
+              <p className="text-sm sm:text-lg font-bold text-gray-900 dark:text-white">Today, 2:00 PM</p>
             </div>
-            <div className="bg-white rounded-lg p-4 border border-gray-200">
+            <div className="bg-white dark:bg-slate-900 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-slate-800">
               <MessageCircle className="w-6 h-6 sm:w-8 sm:h-8 text-teal-600 mb-2" />
-              <p className="text-xs sm:text-sm text-gray-600">Unread Messages</p>
-              <p className="text-sm sm:text-lg font-bold text-gray-900">1 new</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-400">Unread Messages</p>
+              <p className="text-sm sm:text-lg font-bold text-gray-900 dark:text-white">1 new</p>
             </div>
-            <div className="bg-white rounded-lg p-4 border border-gray-200">
+            <div className="bg-white dark:bg-slate-900 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-slate-800">
               <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600 mb-2" />
-              <p className="text-xs sm:text-sm text-gray-600">Pending Prescriptions</p>
-              <p className="text-sm sm:text-lg font-bold text-gray-900">2 items</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-400">Pending Prescriptions</p>
+              <p className="text-sm sm:text-lg font-bold text-gray-900 dark:text-white">2 items</p>
             </div>
-            <div className="bg-white rounded-lg p-4 border border-gray-200">
+            <div className="bg-white dark:bg-slate-900 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-slate-800">
               <ShoppingCart className="w-6 h-6 sm:w-8 sm:h-8 text-green-600 mb-2" />
-              <p className="text-xs sm:text-sm text-gray-600">Active Orders</p>
-              <p className="text-sm sm:text-lg font-bold text-gray-900">1 order</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-400">Active Orders</p>
+              <p className="text-sm sm:text-lg font-bold text-gray-900 dark:text-white">1 order</p>
             </div>
         </div>
 
-          <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid lg:grid-cols-3 gap-3 sm:gap-8">
           {/* Main Content */}
             <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             {/* Tabs */}
-              <div className="flex gap-2 border-b border-gray-200 bg-white rounded-lg p-2 sm:p-4 overflow-x-auto">
-              {[
-                { id: "appointments", label: "Appointments", icon: Calendar },
-                { id: "messages", label: "Messages", icon: MessageCircle },
-                { id: "prescriptions", label: "Prescriptions", icon: FileText },
-                { id: "orders", label: "Orders", icon: ShoppingCart }
-              ].map(tab => (
+              <div className="grid grid-cols-2 sm:flex gap-2 border-b border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-lg p-2 sm:p-4">
+              {dashboardTabs.map(tab => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                    className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg transition whitespace-nowrap text-sm sm:text-base ${
+                  onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2 rounded-lg transition whitespace-nowrap text-xs sm:text-base ${
                     activeTab === tab.id
-                      ? "bg-blue-100 text-blue-700 font-medium"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "bg-blue-100 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-medium"
+                      : "text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white"
                   }`}
                 >
                   <tab.icon className="w-4 h-4" />
@@ -263,49 +291,49 @@ export function PatientDashboardPage() {
                 {sampleAppointments.map(appointment => (
                   <div
                     key={appointment.id}
-                    className="bg-white rounded-lg p-4 sm:p-6 border border-gray-200 hover:shadow-md transition cursor-pointer"
+                    className="bg-white dark:bg-slate-900 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-slate-800 hover:shadow-md transition cursor-pointer"
                     onClick={() => setSelectedAppointment(appointment)}
                   >
                     <div className="flex items-start justify-between gap-3 mb-4 flex-col sm:flex-row">
-                      <div>
-                        <h3 className="font-bold text-gray-900 text-sm sm:text-base">{appointment.doctor}</h3>
-                        <p className="text-xs sm:text-sm text-gray-600">{appointment.specialty}</p>
+                      <div className="min-w-0 w-full">
+                        <h3 className="font-bold text-gray-900 dark:text-white text-sm sm:text-base break-words">{appointment.doctor}</h3>
+                        <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-400 break-words">{appointment.specialty}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium shrink-0 ${
                         appointment.status === "upcoming"
                           ? "bg-blue-100 text-blue-700"
                           : appointment.status === "completed"
                           ? "bg-green-100 text-green-700"
-                          : "bg-gray-100 text-gray-700"
+                            : "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200"
                       }`}>
                         {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
                       </span>
                     </div>
 
-                    <div className="space-y-2 text-xs sm:text-sm text-gray-600">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4" />
-                        <span>{appointment.date} at {appointment.time}</span>
+                    <div className="space-y-2 text-xs sm:text-sm text-gray-600 dark:text-slate-400">
+                      <div className="flex items-start gap-2">
+                        <Calendar className="w-4 h-4 mt-0.5 shrink-0" />
+                        <span className="break-words">{appointment.date} at {appointment.time}</span>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-start gap-2">
                         {appointment.type === "online" ? (
                           <>
-                            <MessageCircle className="w-4 h-4" />
-                            <span>Video Call</span>
+                            <MessageCircle className="w-4 h-4 mt-0.5 shrink-0" />
+                            <span className="break-words">Video Call</span>
                           </>
                         ) : (
                           <>
-                            <MapPin className="w-4 h-4" />
-                            <span>{appointment.location}</span>
+                            <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
+                            <span className="break-words">{appointment.location}</span>
                           </>
                         )}
                       </div>
                     </div>
 
                     {appointment.status === "upcoming" && (
-                      <div className="mt-4 flex gap-2">
+                      <div className="mt-4 flex flex-col sm:flex-row gap-2">
                         <button
-                          className="flex-1 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-xs sm:text-sm font-medium"
+                          className="flex-1 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-xs sm:text-sm font-medium"
                           onClick={(e) => {
                             e.stopPropagation();
                             navigate("/telemedicine/consultation");
@@ -314,13 +342,14 @@ export function PatientDashboardPage() {
                           {appointment.type === "online" ? "Join Call" : "Check In"}
                         </button>
                         <button
-                          className="px-3 sm:px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                          className="w-full sm:w-auto px-3 sm:px-4 py-2.5 border border-gray-300 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition shrink-0 flex items-center justify-center gap-2 text-gray-700 dark:text-slate-200"
                           onClick={(e) => {
                             e.stopPropagation();
                             navigate("/chat");
                           }}
                         >
                           <MessageCircle className="w-4 h-4" />
+                          <span className="text-xs sm:hidden font-medium">Message</span>
                         </button>
                       </div>
                     )}
@@ -328,7 +357,7 @@ export function PatientDashboardPage() {
                 ))}
 
                 <button
-                  className="w-full py-3 border border-dashed border-gray-300 rounded-lg text-blue-600 font-medium hover:bg-blue-50 transition"
+                  className="w-full py-3.5 border border-dashed border-gray-300 dark:border-slate-700 rounded-lg text-blue-600 dark:text-blue-400 font-medium hover:bg-blue-50 dark:hover:bg-blue-950/20 transition text-sm"
                   onClick={() => setShowBookModal(true)}
                 >
                   + Book New Appointment
@@ -338,23 +367,23 @@ export function PatientDashboardPage() {
 
             {/* Messages Tab */}
             {activeTab === "messages" && (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {sampleMessages.map(message => (
                   <div
                     key={message.id}
-                    className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition cursor-pointer"
+                    className="bg-white dark:bg-slate-900 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-slate-800 hover:shadow-md transition cursor-pointer"
                   >
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <h3 className="font-bold text-gray-900 flex items-center gap-2 min-w-0">
-                        <div className="w-8 h-8 rounded-full bg-blue-100"></div>
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
+                      <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2 min-w-0 w-full sm:w-auto">
+                        <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-700"></div>
                         <span className="truncate">{message.doctor}</span>
                         {message.unread > 0 && (
-                          <span className="px-2 py-0.5 bg-red-600 text-white text-xs rounded-full">{message.unread}</span>
+                          <span className="px-2 py-0.5 bg-red-600 text-white text-xs rounded-full shrink-0">{message.unread}</span>
                         )}
                       </h3>
-                      <span className="text-xs text-gray-600">{message.time}</span>
+                      <span className="text-[11px] sm:text-xs text-gray-600 dark:text-slate-400 self-end sm:self-auto shrink-0">{message.time}</span>
                     </div>
-                    <p className="text-sm text-gray-600">{message.lastMessage}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-400 break-words leading-relaxed">{message.lastMessage}</p>
                   </div>
                 ))}
               </div>
@@ -364,26 +393,26 @@ export function PatientDashboardPage() {
             {activeTab === "prescriptions" && (
               <div className="space-y-4">
                 {[1, 2].map(i => (
-                  <div key={i} className="bg-white rounded-lg p-4 sm:p-6 border border-gray-200">
-                    <div className="flex items-center justify-between mb-4">
+                  <div key={i} className="bg-white dark:bg-slate-900 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-slate-800">
+                    <div className="flex items-start sm:items-center justify-between gap-2 mb-4">
                       <div>
-                        <h3 className="font-bold text-gray-900">Prescription from Dr. Sarah Johnson</h3>
-                        <p className="text-sm text-gray-600">Issued 2 days ago</p>
+                        <h3 className="font-bold text-gray-900 dark:text-white">Prescription from Dr. Sarah Johnson</h3>
+                        <p className="text-sm text-gray-600 dark:text-slate-400">Issued 2 days ago</p>
                       </div>
                       <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">Active</span>
                     </div>
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-700">Ibuprofen 200mg</span>
-                        <span className="text-gray-600">3 times daily</span>
+                        <span className="text-gray-700 dark:text-slate-200">Ibuprofen 200mg</span>
+                        <span className="text-gray-600 dark:text-slate-400">3 times daily</span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-700">Amoxicillin 500mg</span>
-                        <span className="text-gray-600">Twice daily</span>
+                        <span className="text-gray-700 dark:text-slate-200">Amoxicillin 500mg</span>
+                        <span className="text-gray-600 dark:text-slate-400">Twice daily</span>
                       </div>
                     </div>
                     <button
-                      className="w-full py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition text-sm font-medium"
+                      className="w-full py-2 border border-blue-600 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-950/20 transition text-sm font-medium"
                       onClick={() => navigate("/marketplace/services")}
                     >
                       View & Download
@@ -396,20 +425,20 @@ export function PatientDashboardPage() {
             {/* Orders Tab */}
             {activeTab === "orders" && (
               <div className="space-y-4">
-                <div className="bg-white rounded-lg p-4 sm:p-6 border border-gray-200">
-                  <div className="flex items-start justify-between mb-4">
+                  <div className="bg-white dark:bg-slate-900 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-slate-800">
+                  <div className="flex items-start justify-between gap-2 mb-4">
                     <div>
-                      <h3 className="font-bold text-gray-900">Lab Test Package</h3>
-                      <p className="text-sm text-gray-600">Order #LP-001234</p>
+                      <h3 className="font-bold text-gray-900 dark:text-white">Lab Test Package</h3>
+                      <p className="text-sm text-gray-600 dark:text-slate-400">Order #LP-001234</p>
                     </div>
                     <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Completed</span>
                   </div>
                   <div className="flex items-center justify-between text-sm mb-4">
-                    <span className="text-gray-700">Full Blood Checkup</span>
-                    <span className="font-bold text-gray-900">₵250.00</span>
+                    <span className="text-gray-700 dark:text-slate-200">Full Blood Checkup</span>
+                    <span className="font-bold text-gray-900 dark:text-white">₵250.00</span>
                   </div>
                   <button
-                    className="w-full py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition text-sm font-medium"
+                    className="w-full py-2 border border-blue-600 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-950/20 transition text-sm font-medium"
                     onClick={() => navigate("/marketplace/services")}
                   >
                     View Results
@@ -420,20 +449,20 @@ export function PatientDashboardPage() {
           </div>
 
           {/* Sidebar */}
-          <aside className="space-y-6">
+          <aside className="space-y-4 sm:space-y-6">
             {/* Profile Card */}
-            <div className="bg-white rounded-lg p-4 sm:p-6 border border-gray-200">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+            <div className="bg-white dark:bg-slate-900 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-slate-800">
+              <div className="flex items-center gap-3 sm:gap-4 mb-4">
+                <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-slate-700 flex items-center justify-center">
                   <UserCircle className="w-8 h-8 text-blue-600" />
                 </div>
-                <div>
-                  <h3 className="font-bold text-gray-900">John Doe</h3>
-                  <p className="text-xs text-gray-600">Member since 2024</p>
+                <div className="min-w-0">
+                  <h3 className="font-bold text-gray-900 dark:text-white truncate">John Doe</h3>
+                  <p className="text-xs text-gray-600 dark:text-slate-400">Member since 2024</p>
                 </div>
               </div>
               <button
-                className="w-full py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm font-medium"
+                className="w-full py-2 border border-gray-300 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition text-sm font-medium text-gray-800 dark:text-slate-200"
                 onClick={() => navigate("/user/dashboard")}
               >
                 Edit Profile
@@ -441,18 +470,18 @@ export function PatientDashboardPage() {
             </div>
 
             {/* Upcoming Appointment */}
-            <div className="bg-gradient-to-br from-blue-50 to-teal-50 rounded-lg p-4 sm:p-6 border border-blue-200">
-              <h3 className="font-bold text-gray-900 mb-3">Today's Appointment</h3>
-              <div className="space-y-2 text-sm mb-4">
-                <div className="flex items-center gap-2 text-gray-700">
+            <div className="bg-gradient-to-br from-blue-50 to-teal-50 dark:from-slate-900 dark:to-slate-800 rounded-lg p-4 sm:p-6 border border-blue-200 dark:border-slate-700">
+              <h3 className="font-bold text-gray-900 dark:text-white mb-3 text-sm sm:text-base">Today's Appointment</h3>
+              <div className="space-y-2 text-xs sm:text-sm mb-4">
+                <div className="flex items-center gap-2 text-gray-700 dark:text-slate-300">
                   <Clock className="w-4 h-4 text-blue-600" />
                   <span>2:00 PM - 2:30 PM</span>
                 </div>
-                <div className="text-gray-700 font-medium">Dr. Sarah Johnson</div>
-                <div className="text-gray-600">General Consultation</div>
+                <div className="text-gray-700 dark:text-slate-200 font-medium">Dr. Sarah Johnson</div>
+                <div className="text-gray-600 dark:text-slate-400">General Consultation</div>
               </div>
               <button
-                className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-bold"
+                className="w-full py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-xs sm:text-sm font-bold"
                 onClick={() => navigate("/telemedicine/consultation")}
               >
                 Join Video Call
@@ -460,16 +489,16 @@ export function PatientDashboardPage() {
             </div>
 
             {/* Health Tips */}
-            <div className="bg-white rounded-lg p-4 sm:p-6 border border-gray-200">
-              <h3 className="font-bold text-gray-900 mb-4">Health Tips</h3>
+            <div className="bg-white dark:bg-slate-900 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-slate-800">
+              <h3 className="font-bold text-gray-900 dark:text-white mb-4 text-sm sm:text-base">Health Tips</h3>
               <div className="space-y-3">
-                <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-                  <p className="text-xs font-medium text-green-700">Stay Hydrated</p>
-                  <p className="text-xs text-green-600 mt-1">Drink 8-10 glasses of water daily</p>
+                <div className="p-3 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-200 dark:border-green-900/50">
+                  <p className="text-xs font-medium text-green-700 dark:text-green-300">Stay Hydrated</p>
+                  <p className="text-xs text-green-600 dark:text-green-400 mt-1 break-words">Drink 8-10 glasses of water daily</p>
                 </div>
-                <div className="p-3 bg-orange-50 rounded-lg border border-orange-200">
-                  <p className="text-xs font-medium text-orange-700">Exercise Daily</p>
-                  <p className="text-xs text-orange-600 mt-1">30 minutes of moderate activity</p>
+                <div className="p-3 bg-orange-50 dark:bg-orange-950/30 rounded-lg border border-orange-200 dark:border-orange-900/50">
+                  <p className="text-xs font-medium text-orange-700 dark:text-orange-300">Exercise Daily</p>
+                  <p className="text-xs text-orange-600 dark:text-orange-400 mt-1 break-words">30 minutes of moderate activity</p>
                 </div>
               </div>
             </div>
@@ -478,29 +507,29 @@ export function PatientDashboardPage() {
         </div>
         {/* Appointment Modal */}
         {selectedAppointment && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg max-w-md w-full p-6">
+          <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center p-2 sm:p-4 z-50">
+            <div className="bg-white dark:bg-slate-900 rounded-lg max-w-md w-full p-4 sm:p-6 max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-slate-800">
               <div className="flex items-center justify-end mb-1">
                 <button
                   onClick={() => setSelectedAppointment(null)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 dark:text-slate-500 dark:hover:text-slate-300"
                 >
                   ✕
                 </button>
               </div>
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Appointment Details</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Appointment Details</h2>
               <div className="space-y-3 mb-6">
                 <div>
-                  <p className="text-xs text-gray-600">Doctor</p>
-                  <p className="font-bold text-gray-900">{selectedAppointment.doctor}</p>
+                  <p className="text-xs text-gray-600 dark:text-slate-400">Doctor</p>
+                  <p className="font-bold text-gray-900 dark:text-white">{selectedAppointment.doctor}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-600">Date & Time</p>
-                  <p className="font-bold text-gray-900">{selectedAppointment.date}, {selectedAppointment.time}</p>
+                  <p className="text-xs text-gray-600 dark:text-slate-400">Date & Time</p>
+                  <p className="font-bold text-gray-900 dark:text-white">{selectedAppointment.date}, {selectedAppointment.time}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-600">Type</p>
-                  <p className="font-bold text-gray-900 capitalize">{selectedAppointment.type}</p>
+                  <p className="text-xs text-gray-600 dark:text-slate-400">Type</p>
+                  <p className="font-bold text-gray-900 dark:text-white capitalize">{selectedAppointment.type}</p>
                 </div>
               </div>
               <button
@@ -520,7 +549,7 @@ export function PatientDashboardPage() {
         />
 
         {/* Mobile Bottom Navigation */}
-        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40">
+        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 z-40 pb-[env(safe-area-inset-bottom)]">
           <div className="grid grid-cols-4 gap-1 p-2">
             {bottomNavItems.map((item) => {
               const Icon = item.icon;
@@ -528,10 +557,10 @@ export function PatientDashboardPage() {
                 <button
                   key={item.id}
                   onClick={item.onClick}
-                  className="flex flex-col items-center gap-1 p-2 rounded-lg transition text-gray-600 hover:bg-gray-50"
+                  className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg transition text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 min-h-14"
                 >
                   <Icon className="w-5 h-5" />
-                  <span className="text-xs font-medium">{item.label}</span>
+                  <span className="text-[11px] font-medium leading-none">{item.label}</span>
                 </button>
               );
             })}

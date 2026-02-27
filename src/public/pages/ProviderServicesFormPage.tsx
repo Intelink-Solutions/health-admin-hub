@@ -40,6 +40,9 @@ const defaultFormValues: Omit<ProviderService, "id"> = {
   servicesOffered: "",
 };
 
+const SERVICE_FALLBACK_IMAGE =
+  "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300&h=300&fit=crop";
+
 const seedServices: ProviderService[] = [
   {
     id: 1,
@@ -116,11 +119,16 @@ export function ProviderServicesFormPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.providerName || !form.serviceName) return;
+    const normalizedForm = {
+      ...form,
+      image: form.image || SERVICE_FALLBACK_IMAGE,
+    };
+
     if (editingId) {
-      setServices(services.map(s => (s.id === editingId ? { id: editingId, ...form } : s)));
+      setServices(services.map(s => (s.id === editingId ? { id: editingId, ...normalizedForm } : s)));
       setEditingId(null);
     } else {
-      setServices([{ id: Date.now(), ...form }, ...services]);
+      setServices([{ id: Date.now(), ...normalizedForm }, ...services]);
     }
     setForm(defaultFormValues);
     setImageInputKey((prev) => prev + 1);
@@ -400,6 +408,15 @@ export function ProviderServicesFormPage() {
           <div className="space-y-3">
             {services.map((service) => (
               <div key={service.id} className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 p-3 border border-gray-200 dark:border-slate-700 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <img
+                    src={service.image || SERVICE_FALLBACK_IMAGE}
+                    alt={service.serviceName}
+                    className="w-14 h-14 rounded-md object-cover border border-gray-200 dark:border-slate-700"
+                    onError={(e) => {
+                      e.currentTarget.src = SERVICE_FALLBACK_IMAGE;
+                    }}
+                  />
                 <div>
                   <p className="font-medium text-gray-900 dark:text-white">{service.serviceName}</p>
                   <p className="text-xs text-gray-600 dark:text-slate-400">{service.providerName} • {service.category}</p>
@@ -410,6 +427,7 @@ export function ProviderServicesFormPage() {
                       Beds: {service.beds} • Departments: {service.departments} • Rating: {service.rating} • Wait: {service.waitTime}
                     </p>
                   )}
+                </div>
                 </div>
                 <div className="flex items-center gap-2 self-end sm:self-auto">
                   <button

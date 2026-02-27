@@ -95,7 +95,7 @@ export function BookingsPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard label="Total Bookings" value={BOOKINGS.length} icon={BookOpen} />
         <StatCard label="Confirmed" value={BOOKINGS.filter((b) => b.status === "Confirmed").length} icon={Calendar} />
-        <StatCard label="Revenue" value={`₦${(totalRevenue / 1000).toFixed(0)}K`} icon={DollarSign} />
+        <StatCard label="Revenue" value={`₵${(totalRevenue / 1000).toFixed(0)}K`} icon={DollarSign} />
         <StatCard label="Pending Payment" value={BOOKINGS.filter((b) => b.paymentStatus === "Pending").length} icon={DollarSign} />
       </div>
 
@@ -137,7 +137,7 @@ export function BookingsPage() {
                     <p className="text-xs text-muted-foreground">{booking.time}</p>
                   </div>
                 </TableCell>
-                <TableCell className="font-medium">₦{booking.amount.toLocaleString()}</TableCell>
+                <TableCell className="font-medium">₵{booking.amount.toLocaleString()}</TableCell>
                 <TableCell>
                   <StatusBadge status={booking.status} />
                 </TableCell>

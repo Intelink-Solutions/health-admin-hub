@@ -75,7 +75,7 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { label: "Billing",          path: "/finance/billing",   icon: Receipt },
       { label: "Payments",         path: "/finance/payments",  icon: Banknote },
-      { label: "Insurance Claims", path: "/finance/insurance", icon: Shield },
+      { label: "Insurance Claims", path: "/finance/billing", icon: Shield },
       { label: "Financial Reports", path: "/finance/reports",  icon: TrendingUp },
     ],
   },
@@ -244,11 +244,11 @@ export function AppSidebar({ collapsed, onClose }: AppSidebarProps) {
 
       {/* Scrollable nav */}
       <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-0.5">
-        {NAV_SECTIONS.map((section, idx) => (
+        {NAV_SECTIONS.map((section) => (
           <NavSection
             key={section.id}
             section={section}
-            defaultOpen={idx === 0}
+            defaultOpen={true}
           />
         ))}
       </nav>

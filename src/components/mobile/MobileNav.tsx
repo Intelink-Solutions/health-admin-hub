@@ -138,6 +138,13 @@ const MobileNav: React.FC = () => {
     setIsOpen(false);
   };
 
+  const getSettingsPath = () => {
+    if (user?.role === 'provider') {
+      return '/provider/settings';
+    }
+    return '/user/settings';
+  };
+
   const handleLogout = () => {
     logout();
     navigate('/login');
@@ -281,7 +288,7 @@ const MobileNav: React.FC = () => {
                         </div>
                       </div>
                       <Button
-                        onClick={() => handleNavigate(`/${user.role}-settings`)}
+                        onClick={() => handleNavigate(getSettingsPath())}
                         variant="outline"
                         size="sm"
                         className="w-full justify-start gap-2 text-xs border-slate-300 dark:border-slate-700"

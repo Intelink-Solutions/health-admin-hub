@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { User, Mail, Lock, Phone, ArrowRight, AlertCircle, CheckCircle2 } from "lucide-react";
 
 type RegisterStep = "role" | "info" | "contact" | "success";
@@ -56,63 +56,63 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 flex items-center justify-center p-4 sm:p-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 dark:from-slate-950 dark:to-slate-900 flex items-center justify-center p-4 sm:p-6 transition-colors duration-300">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-6 sm:mb-8">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-teal-600 flex items-center justify-center mx-auto mb-4">
             <span className="text-white text-xl font-bold">BP</span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Create Account</h1>
-          <p className="text-sm text-gray-600 mt-1">Join BesaPlus Healthcare</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Create Account</h1>
+          <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">Join BesaPlus Healthcare</p>
         </div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-800 p-6 sm:p-8">
           {/* Step Indicator */}
           {step !== "role" && step !== "success" && (
             <div className="flex justify-between mb-8">
               <div className="flex-1 h-1 bg-blue-600 rounded-full mr-2"></div>
-              <div className="flex-1 h-1 bg-gray-300 rounded-full"></div>
+              <div className="flex-1 h-1 bg-gray-300 dark:bg-slate-700 rounded-full"></div>
             </div>
           )}
 
           {step === "role" ? (
             // Role Selection
             <div className="space-y-4">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">I am a...</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">I am a...</h2>
               <button
                 onClick={() => handleRoleSelect("patient")}
-                className="w-full p-4 sm:p-6 border-2 border-gray-300 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition text-left"
+                className="w-full p-4 sm:p-6 border-2 border-gray-300 dark:border-slate-700 rounded-xl hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/20 transition text-left"
               >
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
                     <User className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900">Patient / User</h3>
-                    <p className="text-sm text-gray-600">Book appointments, access medical records</p>
+                    <h3 className="font-bold text-gray-900 dark:text-white">Patient / User</h3>
+                    <p className="text-sm text-gray-600 dark:text-slate-400">Book appointments, access medical records</p>
                   </div>
                 </div>
               </button>
 
               <button
                 onClick={() => handleRoleSelect("provider")}
-                className="w-full p-4 sm:p-6 border-2 border-gray-300 rounded-xl hover:border-teal-600 hover:bg-teal-50 transition text-left"
+                className="w-full p-4 sm:p-6 border-2 border-gray-300 dark:border-slate-700 rounded-xl hover:border-teal-600 hover:bg-teal-50 dark:hover:bg-teal-950/20 transition text-left"
               >
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-lg bg-teal-100 flex items-center justify-center shrink-0">
                     <User className="w-6 h-6 text-teal-600" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900">Provider</h3>
-                    <p className="text-sm text-gray-600">Doctor, clinic, hospital or home-care provider</p>
+                    <h3 className="font-bold text-gray-900 dark:text-white">Provider</h3>
+                    <p className="text-sm text-gray-600 dark:text-slate-400">Doctor, clinic, hospital or home-care provider</p>
                   </div>
                 </div>
               </button>
 
-              <p className="text-center text-sm text-gray-600 mt-6">
-                Already have an account? <a href="/login" className="text-blue-600 font-medium">Sign in</a>
+              <p className="text-center text-sm text-gray-600 dark:text-slate-400 mt-6">
+                Already have an account? <Link to="/login" className="text-blue-600 font-medium">Sign in</Link>
               </p>
             </div>
           ) : step === "success" ? (
@@ -122,8 +122,8 @@ export function RegisterPage() {
                 <CheckCircle2 className="w-8 h-8 text-green-600" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-gray-900">Account created!</h2>
-                <p className="text-sm text-gray-600 mt-2">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Account created!</h2>
+                <p className="text-sm text-gray-600 dark:text-slate-400 mt-2">
                   {role === "provider" ? "Your provider account is under review. We'll notify you soon." : "Welcome to BesaPlus. Start booking now!"}
                 </p>
               </div>
@@ -138,26 +138,26 @@ export function RegisterPage() {
             // Info Collection
             <form onSubmit={handleInfoNext} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Full Name</label>
                 <div className="relative">
-                  <User className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+                  <User className="absolute left-3 top-3.5 w-5 h-5 text-gray-400 dark:text-slate-500" />
                   <input
                     type="text"
                     value={fullName}
                     onChange={(e) => { setFullName(e.target.value); setError(""); }}
                     placeholder="John Doe"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                   />
                 </div>
               </div>
 
               {role === "provider" && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Clinic/Organization Name</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Clinic/Organization Name</label>
                   <input
                     type="text"
                     placeholder="Your clinic name"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                   />
                 </div>
               )}
@@ -173,7 +173,7 @@ export function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setStep("role")}
-                  className="flex-1 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition"
+                  className="flex-1 py-3 border border-gray-300 dark:border-slate-700 rounded-lg font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
                 >
                   Back
                 </button>
@@ -189,57 +189,57 @@ export function RegisterPage() {
             // Contact & Password
             <form onSubmit={handleRegister} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Email Address</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+                  <Mail className="absolute left-3 top-3.5 w-5 h-5 text-gray-400 dark:text-slate-500" />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your@email.com"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Phone Number</label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+                  <Phone className="absolute left-3 top-3.5 w-5 h-5 text-gray-400 dark:text-slate-500" />
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+1 (555) 000-0000"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+                  <Lock className="absolute left-3 top-3.5 w-5 h-5 text-gray-400 dark:text-slate-500" />
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Minimum 8 characters"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Confirm Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+                  <Lock className="absolute left-3 top-3.5 w-5 h-5 text-gray-400 dark:text-slate-500" />
                   <input
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Confirm your password"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                   />
                 </div>
               </div>
@@ -251,10 +251,10 @@ export function RegisterPage() {
                 </div>
               )}
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-start gap-2">
                 <input type="checkbox" id="terms" className="w-4 h-4 rounded border-gray-300 text-blue-600" />
-                <label htmlFor="terms" className="text-sm text-gray-700">
-                  I agree to the <a href="#" className="text-blue-600 hover:underline">Terms of Service</a> and <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a>
+                <label htmlFor="terms" className="text-sm text-gray-700 dark:text-slate-300">
+                  I agree to the <Link to="/home" className="text-blue-600 hover:underline">Terms of Service</Link> and <Link to="/home" className="text-blue-600 hover:underline">Privacy Policy</Link>
                 </label>
               </div>
 
@@ -262,7 +262,7 @@ export function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setStep("info")}
-                  className="flex-1 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition"
+                  className="flex-1 py-3 border border-gray-300 dark:border-slate-700 rounded-lg font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
                 >
                   Back
                 </button>

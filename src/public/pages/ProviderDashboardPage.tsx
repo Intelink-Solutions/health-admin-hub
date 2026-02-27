@@ -44,6 +44,8 @@ interface CallRecord {
   status: "completed" | "missed" | "ongoing";
 }
 
+type ProviderNavSection = "dashboard" | "appointments" | "analytics" | "calls" | "patients" | "earnings";
+
 const dailyAnalytics: AnalyticsData[] = [
   { period: "Mon", calls: 12, clicks: 45, views: 234, bookings: 8 },
   { period: "Tue", calls: 15, clicks: 52, views: 267, bookings: 10 },
@@ -94,7 +96,7 @@ export function ProviderDashboardPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
-  const [activeNav, setActiveNav] = useState<"dashboard" | "appointments" | "analytics" | "calls" | "patients" | "earnings">("dashboard");
+  const [activeNav, setActiveNav] = useState<ProviderNavSection>("dashboard");
   const [analyticsView, setAnalyticsView] = useState<"daily" | "weekly" | "monthly">("daily");
   const [selectedAppointment, setSelectedAppointment] = useState<ProviderAppointment | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -117,7 +119,7 @@ export function ProviderDashboardPage() {
     }
   };
 
-  const navigationItems = [
+  const navigationItems: Array<{ id: ProviderNavSection | "services"; label: string; icon: typeof LayoutDashboard; path?: string }> = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "appointments", label: "Appointments", icon: Calendar },
     { id: "analytics", label: "Analytics", icon: BarChart3 },
@@ -167,7 +169,7 @@ export function ProviderDashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex transition-colors duration-300">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex transition-colors duration-300 overflow-x-hidden">
       {/* Side Navigation - Desktop */}
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 transform transition-transform duration-300 lg:translate-x-0 lg:static flex flex-col h-screen ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -197,7 +199,7 @@ export function ProviderDashboardPage() {
                     setSidebarOpen(false);
                     return;
                   }
-                  setActiveNav(item.id as any);
+                  setActiveNav(item.id as ProviderNavSection);
                   setSidebarOpen(false);
                 }}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${
@@ -236,7 +238,7 @@ export function ProviderDashboardPage() {
 
       {sidebarOpen && <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />}
 
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
         <header className="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 sticky top-0 z-30">
           <div className="h-16 px-3 sm:px-6 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
@@ -681,6 +683,11 @@ export function ProviderDashboardPage() {
             </div>
           )}
         </main>
+
+        <div className="lg:hidden px-4 pb-20 pt-3 text-center text-xs text-gray-500 dark:text-slate-400">
+          <p>BesaPlus v1.0.0</p>
+          <p className="text-[10px] mt-1">Your Healthcare Companion</p>
+        </div>
 
         {/* Mobile Bottom Navigation */}
         <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 z-40">

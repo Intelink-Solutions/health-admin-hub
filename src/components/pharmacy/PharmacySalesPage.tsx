@@ -85,7 +85,7 @@ export function PharmacySalesPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard label="Total Sales" value={PHARMACY_SALES.length} icon={ShoppingCart} />
         <StatCard label="Today's Sales" value={todaySales} icon={TrendingUp} />
-        <StatCard label="Total Revenue" value={`₦${(totalRevenue / 1000).toFixed(0)}K`} icon={DollarSign} />
+        <StatCard label="Total Revenue" value={`₵${(totalRevenue / 1000).toFixed(0)}K`} icon={DollarSign} />
         <StatCard label="Pending" value={PHARMACY_SALES.filter((s) => s.status === "Pending").length} icon={Package} />
       </div>
 
@@ -124,7 +124,7 @@ export function PharmacySalesPage() {
                   <Badge variant="outline">{sale.customerType}</Badge>
                 </TableCell>
                 <TableCell className="text-sm">{sale.items}</TableCell>
-                <TableCell className="text-sm font-medium">₦{sale.totalAmount.toLocaleString()}</TableCell>
+                <TableCell className="text-sm font-medium">₵{sale.totalAmount.toLocaleString()}</TableCell>
                 <TableCell className="text-sm">{sale.paymentMethod}</TableCell>
                 <TableCell>
                   <StatusBadge status={sale.status} />

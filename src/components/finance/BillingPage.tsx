@@ -188,7 +188,7 @@ function ClaimSummaryCard() {
           <div className="flex items-center justify-between">
             <span className="text-xs text-muted-foreground">Total Claims Value</span>
             <span className="text-sm font-bold text-foreground">
-              ${CLAIMS.reduce((a, c) => a + c.amount, 0).toLocaleString()}
+              ₵{CLAIMS.reduce((a, c) => a + c.amount, 0).toLocaleString()}
             </span>
           </div>
         </div>
@@ -237,9 +237,9 @@ export function BillingPage() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Total Revenue" value={`$${totalRevenue.toLocaleString()}`} sub="All invoices" icon={DollarSign} iconBg="gradient-primary" trend="up" trendValue="12.5%" />
-        <StatCard title="Collected" value={`$${totalCollected.toLocaleString()}`} sub="Payments received" icon={CheckCircle2} iconBg="bg-[hsl(var(--success))]" trend="up" trendValue="8.3%" />
-        <StatCard title="Outstanding" value={`$${totalPending.toLocaleString()}`} sub="Awaiting payment" icon={Clock} iconBg="bg-[hsl(var(--warning))]" trend="down" trendValue="3.2%" />
+        <StatCard title="Total Revenue" value={`₵${totalRevenue.toLocaleString()}`} sub="All invoices" icon={DollarSign} iconBg="gradient-primary" trend="up" trendValue="12.5%" />
+        <StatCard title="Collected" value={`₵${totalCollected.toLocaleString()}`} sub="Payments received" icon={CheckCircle2} iconBg="bg-[hsl(var(--success))]" trend="up" trendValue="8.3%" />
+        <StatCard title="Outstanding" value={`₵${totalPending.toLocaleString()}`} sub="Awaiting payment" icon={Clock} iconBg="bg-[hsl(var(--warning))]" trend="down" trendValue="3.2%" />
         <StatCard title="Overdue" value={String(overdueCount)} sub="Past due date" icon={AlertCircle} iconBg="bg-destructive" />
       </div>
 
@@ -313,8 +313,8 @@ export function BillingPage() {
                       </div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell text-xs text-muted-foreground">{inv.dept}</TableCell>
-                    <TableCell className="text-right font-semibold text-sm">${inv.amount.toLocaleString()}</TableCell>
-                    <TableCell className="text-right text-sm hidden sm:table-cell">${inv.paid.toLocaleString()}</TableCell>
+                    <TableCell className="text-right font-semibold text-sm">₵{inv.amount.toLocaleString()}</TableCell>
+                    <TableCell className="text-right text-sm hidden sm:table-cell">₵{inv.paid.toLocaleString()}</TableCell>
                     <TableCell><StatusBadge status={inv.status} /></TableCell>
                     <TableCell className="hidden lg:table-cell text-xs text-muted-foreground">{inv.method}</TableCell>
                     <TableCell className="hidden lg:table-cell text-xs text-muted-foreground">{inv.due}</TableCell>
@@ -391,7 +391,7 @@ export function BillingPage() {
                       <TableCell className="font-medium text-xs">{c.id}</TableCell>
                       <TableCell className="text-sm">{c.patient}</TableCell>
                       <TableCell className="hidden md:table-cell text-xs text-muted-foreground">{c.provider}</TableCell>
-                      <TableCell className="text-right font-semibold text-sm">${c.amount.toLocaleString()}</TableCell>
+                      <TableCell className="text-right font-semibold text-sm">₵{c.amount.toLocaleString()}</TableCell>
                       <TableCell><StatusBadge status={c.status} /></TableCell>
                       <TableCell className="hidden sm:table-cell text-xs text-muted-foreground">{c.submitted}</TableCell>
                     </TableRow>

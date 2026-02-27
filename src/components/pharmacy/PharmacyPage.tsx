@@ -128,7 +128,7 @@ function DispenseModal({ drug, open, onOpenChange }: { drug: Drug | null; open: 
           </div>
           <div className="rounded-lg bg-muted/30 p-3 flex justify-between text-sm">
             <span className="text-muted-foreground">Total Cost</span>
-            <span className="font-semibold text-foreground">${(drug.price * Number(qty || 0)).toFixed(2)}</span>
+            <span className="font-semibold text-foreground">₵{(drug.price * Number(qty || 0)).toFixed(2)}</span>
           </div>
         </div>
         <DialogFooter>
@@ -248,7 +248,7 @@ export function PharmacyPage() {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="text-sm font-medium text-foreground">${d.price.toFixed(2)}</TableCell>
+                <TableCell className="text-sm font-medium text-foreground">₵{d.price.toFixed(2)}</TableCell>
                 <TableCell>{expiryBadge(d.expiryDate)}</TableCell>
                 <TableCell><Badge className={statusBadgeClass(d.status)}>{d.status}</Badge></TableCell>
                 <TableCell>

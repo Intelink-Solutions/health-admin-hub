@@ -73,9 +73,9 @@ const App = () => (
               <Route path="/discover/doctors" element={<PublicLayout><DoctorsPage /></PublicLayout>} />
               <Route path="/discover/hospitals" element={<PublicLayout><HospitalsPage /></PublicLayout>} />
               <Route path="/telemedicine/consultation" element={<PublicLayout><TelemedicineConsultationPage /></PublicLayout>} />
-              <Route path="/user/dashboard" element={<PublicLayout><PatientDashboardPage /></PublicLayout>} />
+              <Route path="/user/dashboard" element={<PatientDashboardPage />} />
               <Route path="/marketplace/services" element={<PublicLayout><EcommerceServicesPage /></PublicLayout>} />
-              <Route path="/provider/dashboard" element={<PublicLayout><ProviderDashboardPage /></PublicLayout>} />
+              <Route path="/provider/dashboard" element={<ProviderDashboardPage />} />
               <Route path="/chat" element={<PublicLayout><ChatPage /></PublicLayout>} />
               <Route path="/provider/services" element={<PublicLayout><ProviderServicesFormPage /></PublicLayout>} />
               <Route path="/provider/settings" element={<PublicLayout><ProviderSettingsPage /></PublicLayout>} />

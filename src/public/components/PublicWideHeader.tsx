@@ -1,9 +1,11 @@
 import { UserCircle } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import type { ReactNode } from "react";
 
 interface PublicWideHeaderProps {
-  extraAction?: React.ReactNode;
+  extraAction?: ReactNode;
 }
 
 export function PublicWideHeader({ extraAction }: PublicWideHeaderProps) {
@@ -23,9 +25,43 @@ export function PublicWideHeader({ extraAction }: PublicWideHeaderProps) {
         </div>
 
         <nav className="hidden md:flex items-center gap-8">
-          <a href="/discover/doctors" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white text-sm transition-colors">Doctors</a>
-          <a href="/discover/hospitals" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white text-sm transition-colors">Hospitals</a>
-          <a href="/marketplace/services" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white text-sm transition-colors">Services</a>
+          <NavLink
+            to="/discover/doctors"
+            className={({ isActive }) =>
+              `text-sm transition-colors ${
+                isActive
+                  ? "text-gray-900 dark:text-white font-medium"
+                  : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+              }`
+            }
+          >
+            Doctors
+          </NavLink>
+          <NavLink
+            to="/discover/hospitals"
+            className={({ isActive }) =>
+              `text-sm transition-colors ${
+                isActive
+                  ? "text-gray-900 dark:text-white font-medium"
+                  : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+              }`
+            }
+          >
+            Hospitals
+          </NavLink>
+          <NavLink
+            to="/marketplace/services"
+            className={({ isActive }) =>
+              `text-sm transition-colors ${
+                isActive
+                  ? "text-gray-900 dark:text-white font-medium"
+                  : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+              }`
+            }
+          >
+            Services
+          </NavLink>
+          <ThemeToggle />
           {extraAction}
           {isAuthenticated ? (
             <button
@@ -36,7 +72,12 @@ export function PublicWideHeader({ extraAction }: PublicWideHeaderProps) {
               <UserCircle className="w-5 h-5 text-gray-700 dark:text-gray-200" />
             </button>
           ) : (
-            <a href="/login" className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors">Sign In</a>
+            <button
+              onClick={() => navigate("/login")}
+              className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors"
+            >
+              Sign In
+            </button>
           )}
         </nav>
 
@@ -51,7 +92,12 @@ export function PublicWideHeader({ extraAction }: PublicWideHeaderProps) {
               <UserCircle className="w-5 h-5 text-gray-700 dark:text-gray-200" />
             </button>
           ) : (
-            <a href="/login" className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-medium transition-colors">Sign In</a>
+            <button
+              onClick={() => navigate("/login")}
+              className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-medium transition-colors"
+            >
+              Sign In
+            </button>
           )}
         </div>
       </div>

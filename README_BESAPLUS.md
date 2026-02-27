@@ -9,7 +9,7 @@
 
 ## 🎯 What Is BesaPlus?
 
-BesaPlus is a **complete, enterprise-grade healthcare management platform** featuring:
+BesaPlus is a **complete, enterprise-grade healthcare management platform build by Intelink Solutions** featuring:
 
 - **Public User Website** (Homepage, discovery, authentication)
 - **Patient Dashboard** (Appointments, messages, health records)
@@ -550,3 +550,5 @@ Your BesaPlus healthcare platform is **production-ready** and **fully functional
 **Built with ❤️ using React, TypeScript, TailwindCSS & shadcn/ui**
 
 *Enterprise healthcare technology at your fingertips.*
+
+Contact if you Need a copy, Whatsapp: +233204447505

@@ -10,6 +10,19 @@ import {
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line,
 } from "recharts";
 
+interface ChartTooltipEntry {
+  dataKey: string | number;
+  name: string;
+  value: string | number;
+  color?: string;
+}
+
+interface ChartTooltipProps {
+  active?: boolean;
+  payload?: ChartTooltipEntry[];
+  label?: string;
+}
+
 /* ── Helpers ── */
 const admissionsData = [
   { day: "Mon", opd: 142, ipd: 28, emergency: 14 },
@@ -125,14 +138,14 @@ function AppointmentBadge({ status }: { status: string }) {
 }
 
 /* ── Custom Tooltip ── */
-function ChartTooltip({ active, payload, label }: any) {
+function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-card border border-border rounded-lg px-3 py-2 shadow-card-md text-xs">
       <p className="font-semibold text-foreground mb-1">{label}</p>
-      {payload.map((p: any) => (
+      {payload.map((p) => (
         <p key={p.dataKey} style={{ color: p.color }}>
-          {p.name}: <span className="font-semibold">{typeof p.value === "number" && p.value > 1000 ? `$${(p.value/1000).toFixed(0)}k` : p.value}</span>
+          {p.name}: <span className="font-semibold">{typeof p.value === "number" && p.value > 1000 ? `₵${(p.value/1000).toFixed(0)}k` : p.value}</span>
         </p>
       ))}
     </div>
@@ -212,8 +225,8 @@ export function DashboardPage() {
         />
         <StatCard
           title="Revenue Today"
-          value="$48,320"
-          sub="Claims: $12,480 pending"
+          value="₵48,320"
+          sub="Claims: ₵12,480 pending"
           icon={CreditCard}
           iconBg="bg-success"
           trend="up"
@@ -347,7 +360,7 @@ export function DashboardPage() {
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
             <XAxis dataKey="month" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${v/1000}k`} />
+            <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} tickFormatter={(v) => `₵${v/1000}k`} />
             <Tooltip content={<ChartTooltip />} />
             <Area type="monotone" dataKey="revenue" name="Revenue" stroke="hsl(var(--primary))" fill="url(#gradRevenue)" strokeWidth={2} dot={false} />
             <Area type="monotone" dataKey="claims"  name="Claims"  stroke="hsl(var(--secondary))" fill="url(#gradClaims)" strokeWidth={2} dot={false} />

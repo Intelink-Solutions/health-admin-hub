@@ -1,6 +1,6 @@
 import { Search, MapPin, Star, Clock, Users, TrendingUp, CheckCircle2, Phone, Shield, Zap, MessageCircle, MessageSquare, Stethoscope, Building2, Home } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BookingFormModal } from "@/components/BookingFormModal";
 import { PublicWideHeader } from "../components/PublicWideHeader";
 
@@ -114,6 +114,8 @@ const features = [
   { icon: Phone, title: "24/7 Support", description: "We're here to help anytime you need us" }
 ];
 
+const searchTypeOptions: Array<"doctor" | "hospital" | "clinic"> = ["doctor", "hospital", "clinic"];
+
 export function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchType, setSearchType] = useState<"doctor" | "hospital" | "clinic">("doctor");
@@ -161,10 +163,10 @@ export function HomePage() {
           <div className="bg-white dark:bg-slate-800 rounded-lg md:rounded-2xl shadow-2xl p-4 md:p-8 animate-in fade-in slide-in-from-bottom-2 duration-700 delay-100">
             <div className="space-y-3 md:space-y-4">
               <div className="flex gap-2 md:gap-3 flex-wrap justify-center md:justify-start">
-                {["doctor", "hospital", "clinic"].map(type => (
+                {searchTypeOptions.map(type => (
                   <button
                     key={type}
-                    onClick={() => setSearchType(type as any)}
+                    onClick={() => setSearchType(type)}
                     className={`px-3 md:px-4 py-2 rounded-lg font-medium capitalize transition transform hover:scale-105 active:scale-95 text-xs md:text-sm ${
                       searchType === type
                         ? "bg-blue-600 text-white shadow-lg"
@@ -274,7 +276,7 @@ export function HomePage() {
               <h2 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white">Featured Providers</h2>
               <p className="text-sm md:text-base text-gray-600 dark:text-slate-400 mt-2">Top-rated doctors and clinics near you</p>
             </div>
-            <a href="/discover/doctors" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium text-sm md:text-base whitespace-nowrap">View All →</a>
+            <Link to="/discover/doctors" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium text-sm md:text-base whitespace-nowrap">View All →</Link>
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
@@ -366,12 +368,12 @@ export function HomePage() {
         <div className="max-w-4xl mx-auto px-4 text-center text-white">
           <h2 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4">Ready to book your appointment?</h2>
           <p className="text-sm md:text-lg mb-6 md:mb-8 opacity-90">Get started in seconds with no registration hassle</p>
-          <a
-            href="/register"
+          <button
+            onClick={() => navigate("/register")}
             className="inline-block px-6 md:px-8 py-2 md:py-3 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition font-bold text-sm md:text-base transform hover:scale-105 active:scale-95"
           >
             Get Started Free
-          </a>
+          </button>
         </div>
       </section>
 
@@ -389,25 +391,25 @@ export function HomePage() {
             <div>
               <h4 className="text-white font-bold mb-3 md:mb-4 text-sm md:text-base">Platform</h4>
               <ul className="space-y-2 text-xs md:text-sm">
-                <li><a href="#" className="hover:text-white">Browse Doctors</a></li>
-                <li><a href="#" className="hover:text-white">Services</a></li>
-                <li><a href="#" className="hover:text-white">Pricing</a></li>
+                <li><Link to="/discover/doctors" className="hover:text-white">Browse Doctors</Link></li>
+                <li><Link to="/marketplace/services" className="hover:text-white">Services</Link></li>
+                <li><Link to="/marketplace/services" className="hover:text-white">Pricing</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="text-white font-bold mb-3 md:mb-4 text-sm md:text-base">Company</h4>
               <ul className="space-y-2 text-xs md:text-sm">
-                <li><a href="#" className="hover:text-white">About Us</a></li>
-                <li><a href="#" className="hover:text-white">Blog</a></li>
-                <li><a href="#" className="hover:text-white">Contact</a></li>
+                <li><Link to="/home" className="hover:text-white">About Us</Link></li>
+                <li><Link to="/home" className="hover:text-white">Blog</Link></li>
+                <li><Link to="/home" className="hover:text-white">Contact</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="text-white font-bold mb-3 md:mb-4 text-sm md:text-base">Legal</h4>
               <ul className="space-y-2 text-xs md:text-sm">
-                <li><a href="#" className="hover:text-white">Privacy</a></li>
-                <li><a href="#" className="hover:text-white">Terms</a></li>
-                <li><a href="#" className="hover:text-white">HIPAA</a></li>
+                <li><Link to="/home" className="hover:text-white">Privacy</Link></li>
+                <li><Link to="/home" className="hover:text-white">Terms</Link></li>
+                <li><Link to="/home" className="hover:text-white">HIPAA</Link></li>
               </ul>
             </div>
           </div>

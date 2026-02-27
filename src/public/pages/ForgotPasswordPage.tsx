@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Mail, ArrowLeft, AlertCircle, CheckCircle2 } from "lucide-react";
 
 type ForgotPasswordStep = "email" | "verification" | "reset" | "success";
@@ -74,38 +75,38 @@ export function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 dark:from-slate-950 dark:to-slate-900 flex items-center justify-center p-4 transition-colors duration-300">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <button
             onClick={() => window.history.back()}
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+            className="inline-flex items-center gap-2 text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white mb-4"
           >
             <ArrowLeft className="w-5 h-5" />
             Back
           </button>
-          <h1 className="text-2xl font-bold text-gray-900">Reset Password</h1>
-          <p className="text-sm text-gray-600 mt-1">We'll help you regain access</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Reset Password</h1>
+          <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">We'll help you regain access</p>
         </div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-8">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-800 p-6 sm:p-8">
           {step === "email" && (
             <form onSubmit={handleEmailSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Email Address</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+                  <Mail className="absolute left-3 top-3.5 w-5 h-5 text-gray-400 dark:text-slate-500" />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); setError(""); }}
                     placeholder="your@email.com"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                   />
                 </div>
-                <p className="text-xs text-gray-600 mt-2">We'll send a code to verify your email</p>
+                <p className="text-xs text-gray-600 dark:text-slate-400 mt-2">We'll send a code to verify your email</p>
               </div>
 
               {error && (
@@ -130,8 +131,8 @@ export function ForgotPasswordPage() {
           {step === "verification" && (
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-4">Enter the 6-digit code sent to {email}</label>
-                <div className="flex gap-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-4">Enter the 6-digit code sent to {email}</label>
+                <div className="grid grid-cols-6 gap-2">
                   {otp.map((digit, index) => (
                     <input
                       key={index}
@@ -140,7 +141,7 @@ export function ForgotPasswordPage() {
                       value={digit}
                       onChange={(e) => handleOtpChange(index, e.target.value)}
                       maxLength={1}
-                      className="w-12 h-12 text-center border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                      className="w-full h-12 text-center border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                     />
                   ))}
                 </div>
@@ -165,7 +166,7 @@ export function ForgotPasswordPage() {
 
               <button
                 onClick={() => setStep("email")}
-                className="w-full py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition"
+                className="w-full py-3 border border-gray-300 dark:border-slate-700 rounded-lg font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
               >
                 Try Different Email
               </button>
@@ -175,24 +176,24 @@ export function ForgotPasswordPage() {
           {step === "reset" && (
             <form onSubmit={handleResetPassword} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">New Password</label>
                 <input
                   type="password"
                   value={newPassword}
                   onChange={(e) => { setNewPassword(e.target.value); setError(""); }}
                   placeholder="Minimum 8 characters"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Confirm Password</label>
                 <input
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => { setConfirmPassword(e.target.value); setError(""); }}
                   placeholder="Confirm new password"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 />
               </div>
 
@@ -221,15 +222,15 @@ export function ForgotPasswordPage() {
                 <CheckCircle2 className="w-8 h-8 text-green-600" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-gray-900">Password reset successful!</h2>
-                <p className="text-sm text-gray-600 mt-2">Your password has been updated. You can now sign in with your new password.</p>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Password reset successful!</h2>
+                <p className="text-sm text-gray-600 dark:text-slate-400 mt-2">Your password has been updated. You can now sign in with your new password.</p>
               </div>
-              <a
-                href="/login"
+              <Link
+                to="/login"
                 className="w-full block py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition text-center"
               >
                 Back to Sign In
-              </a>
+              </Link>
             </div>
           )}
         </div>

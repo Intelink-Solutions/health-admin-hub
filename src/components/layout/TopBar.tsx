@@ -111,8 +111,10 @@ export function TopBar({ onMenuToggle }: TopBarProps) {
         )}
       </div>
 
-      {/* Theme toggle */}
-      <ThemeToggle />
+      {/* Theme toggle (wide view) */}
+      <div className="hidden md:block">
+        <ThemeToggle />
+      </div>
 
       {/* Redirect to user website */}
       <button

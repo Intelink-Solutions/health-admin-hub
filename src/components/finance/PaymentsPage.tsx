@@ -88,8 +88,8 @@ export function PaymentsPage() {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard label="Total Payments" value={PAYMENTS.length} icon={DollarSign} />
-        <StatCard label="Completed" value={`₦${(totalPayments / 1000).toFixed(0)}K`} icon={CreditCard} />
-        <StatCard label="Pending" value={`₦${(pendingAmount / 1000).toFixed(0)}K`} icon={Clock} />
+        <StatCard label="Completed" value={`₵${(totalPayments / 1000).toFixed(0)}K`} icon={CreditCard} />
+        <StatCard label="Pending" value={`₵${(pendingAmount / 1000).toFixed(0)}K`} icon={Clock} />
         <StatCard label="Success Rate" value="96%" icon={TrendingUp} />
       </div>
 
@@ -137,7 +137,7 @@ export function PaymentsPage() {
                 <TableCell className="font-medium">{payment.id}</TableCell>
                 <TableCell>{payment.invoiceId}</TableCell>
                 <TableCell>{payment.patientName}</TableCell>
-                <TableCell className="font-medium">₦{payment.amount.toLocaleString()}</TableCell>
+                <TableCell className="font-medium">₵{payment.amount.toLocaleString()}</TableCell>
                 <TableCell>
                   <Badge variant="outline">{payment.paymentMethod}</Badge>
                 </TableCell>

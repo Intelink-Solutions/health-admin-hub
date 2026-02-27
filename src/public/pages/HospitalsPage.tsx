@@ -20,6 +20,9 @@ interface Hospital {
   phone: string;
 }
 
+const HOSPITAL_FALLBACK_IMAGE =
+  "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=300&h=200&fit=crop";
+
 const hospitals: Hospital[] = [
   {
     id: 1,
@@ -149,6 +152,8 @@ export function HospitalsPage() {
     window.location.href = `tel:${hospital.phone}`;
   };
 
+  const getHospitalImage = (hospital: Hospital) => hospital.image || HOSPITAL_FALLBACK_IMAGE;
+
   const filteredHospitals = hospitals.filter(hospital => {
     const matchesQuery = hospital.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                         hospital.location.toLowerCase().includes(searchQuery.toLowerCase());
@@ -260,7 +265,14 @@ export function HospitalsPage() {
               {filteredHospitals.map(hospital => (
                 <div key={hospital.id} className="bg-white dark:bg-slate-900 rounded-lg shadow-sm hover:shadow-lg transition overflow-hidden border border-gray-100 dark:border-slate-800">
                   <div className="h-40 bg-gray-200 relative overflow-hidden">
-                    <img src={hospital.image} alt={hospital.name} className="w-full h-full object-cover" />
+                    <img
+                      src={getHospitalImage(hospital)}
+                      alt={hospital.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = HOSPITAL_FALLBACK_IMAGE;
+                      }}
+                    />
                   </div>
 
                   <div className="p-6 space-y-4">
@@ -366,9 +378,12 @@ export function HospitalsPage() {
             </div>
 
             <img
-              src={selectedHospital.image}
+              src={getHospitalImage(selectedHospital)}
               alt={selectedHospital.name}
               className="w-full h-48 object-cover rounded-lg mb-4"
+              onError={(e) => {
+                e.currentTarget.src = HOSPITAL_FALLBACK_IMAGE;
+              }}
             />
 
             <div className="space-y-3 text-sm text-gray-700 dark:text-slate-300 mb-4">

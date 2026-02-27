@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle2, Zap } from "lucide-react";
 
@@ -91,27 +91,27 @@ export function LoginPage() {
   const dashboardLabel = loginRole === "provider" ? "Go to Provider Dashboard" : loginRole === "admin" ? "Go to Admin Dashboard" : "Go to Dashboard";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 flex items-center justify-center p-4 sm:p-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 dark:from-slate-950 dark:to-slate-900 flex items-center justify-center p-4 sm:p-6 transition-colors duration-300">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-6 sm:mb-8">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-teal-600 flex items-center justify-center mx-auto mb-4">
             <span className="text-white text-xl font-bold">BP</span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">BesaPlus</h1>
-          <p className="text-sm text-gray-600 mt-1">Universal Healthcare Solution</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">BesaPlus</h1>
+          <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">Universal Healthcare Solution</p>
         </div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-800 p-6 sm:p-8">
           {step === "success" ? (
             <div className="text-center space-y-6">
               <div className="mx-auto w-16 h-16 rounded-full bg-green-100 flex items-center justify-center animate-bounce">
                 <CheckCircle2 className="w-8 h-8 text-green-600" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-gray-900">Welcome back!</h2>
-                <p className="text-sm text-gray-600 mt-2">You're logged in successfully. Redirecting...</p>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Welcome back!</h2>
+                <p className="text-sm text-gray-600 dark:text-slate-400 mt-2">You're logged in successfully. Redirecting...</p>
               </div>
               <button
                 onClick={() => navigate(dashboardPath)}
@@ -122,22 +122,22 @@ export function LoginPage() {
             </div>
           ) : (
             <form onSubmit={step === "email" ? handleEmailNext : handleLogin} className="space-y-6">
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                 {step === "email" ? "Sign in to your account" : "Enter your password"}
               </h2>
 
               {/* Email Step */}
               {step === "email" && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email address</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Email address</label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+                    <Mail className="absolute left-3 top-3.5 w-5 h-5 text-gray-400 dark:text-slate-500" />
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => { setEmail(e.target.value); setError(""); }}
                       placeholder="your@email.com"
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                     />
                   </div>
                 </div>
@@ -147,22 +147,22 @@ export function LoginPage() {
               {step === "password" && (
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <label className="block text-sm font-medium text-gray-700">Password</label>
-                    <a href="#" className="text-xs text-blue-600 hover:text-blue-700">Forgot?</a>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">Password</label>
+                    <Link to="/forgot-password" className="text-xs text-blue-600 hover:text-blue-700">Forgot?</Link>
                   </div>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+                    <Lock className="absolute left-3 top-3.5 w-5 h-5 text-gray-400 dark:text-slate-500" />
                     <input
                       type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => { setPassword(e.target.value); setError(""); }}
                       placeholder="••••••••"
-                      className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                      className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600"
+                      className="absolute right-3 top-3.5 text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300"
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -184,7 +184,7 @@ export function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setStep("email")}
-                    className="flex-1 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition"
+                    className="flex-1 py-3 border border-gray-300 dark:border-slate-700 rounded-lg font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
                   >
                     Back
                   </button>
@@ -204,16 +204,16 @@ export function LoginPage() {
               {/* Divider */}
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300"></div>
+                  <div className="w-full border-t border-gray-300 dark:border-slate-700"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">or</span>
+                  <span className="px-2 bg-white dark:bg-slate-900 text-gray-500 dark:text-slate-400">or</span>
                 </div>
               </div>
 
               {/* Quick Login Section */}
               <div className="space-y-2">
-                <p className="text-xs text-gray-500 text-center font-medium">Quick Login (Demo)</p>
+                <p className="text-xs text-gray-500 dark:text-slate-400 text-center font-medium">Quick Login (Demo)</p>
                 <div className="grid grid-cols-3 gap-2">
                   <button 
                     type="button"
@@ -246,20 +246,20 @@ export function LoginPage() {
               </div>
 
               {/* Social Buttons */}
-              <button type="button" className="w-full py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition active:scale-95">
+              <button type="button" className="w-full py-3 border border-gray-300 dark:border-slate-700 rounded-lg font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition active:scale-95">
                 Continue with Google
               </button>
 
               {/* Sign Up Link */}
-              <p className="text-center text-sm text-gray-600">
-                Don't have an account? <a href="/register" className="text-blue-600 font-medium hover:text-blue-700">Sign up here</a>
+              <p className="text-center text-sm text-gray-600 dark:text-slate-400">
+                Don't have an account? <Link to="/register" className="text-blue-600 font-medium hover:text-blue-700">Sign up here</Link>
               </p>
             </form>
           )}
         </div>
 
         {/* Footer */}
-        <div className="mt-8 text-center text-xs text-gray-600">
+        <div className="mt-8 text-center text-xs text-gray-600 dark:text-slate-500">
           <p>Secure login • Encrypted connection • HIPAA compliant</p>
         </div>
       </div>

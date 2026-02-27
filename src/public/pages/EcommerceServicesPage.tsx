@@ -207,6 +207,9 @@ const categories = [
   "Vaccination"
 ];
 
+const SERVICE_FALLBACK_IMAGE =
+  "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300&h=300&fit=crop";
+
 export function EcommerceServicesPage() {
   const [cart, setCart] = useState<ServiceItem[]>([]);
   const [favorites, setFavorites] = useState<number[]>([]);
@@ -246,9 +249,7 @@ export function EcommerceServicesPage() {
         price: item.price,
         rating: 4.7,
         reviews: 120,
-        image:
-          item.image ||
-          "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300&h=300&fit=crop",
+        image: item.image || SERVICE_FALLBACK_IMAGE,
         turnaround: "Same day",
         category: item.category,
         description: item.description,
@@ -394,7 +395,14 @@ export function EcommerceServicesPage() {
                 >
                   {/* Image */}
                   <div className="h-40 bg-gray-200 dark:bg-slate-700 relative overflow-hidden">
-                    <img src={service.image} alt={service.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    <img
+                      src={service.image || SERVICE_FALLBACK_IMAGE}
+                      alt={service.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      onError={(e) => {
+                        e.currentTarget.src = SERVICE_FALLBACK_IMAGE;
+                      }}
+                    />
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -523,7 +531,15 @@ export function EcommerceServicesPage() {
                 <p className="text-center text-gray-600 dark:text-slate-400 py-8">Your cart is empty</p>
               ) : (
                 cart.map(item => (
-                  <div key={item.id} className="bg-gray-50 dark:bg-slate-800 rounded-lg p-4 flex items-start justify-between border border-gray-200 dark:border-slate-700 hover:shadow-md transition">
+                  <div key={item.id} className="bg-gray-50 dark:bg-slate-800 rounded-lg p-4 flex items-start gap-3 justify-between border border-gray-200 dark:border-slate-700 hover:shadow-md transition">
+                    <img
+                      src={item.image || SERVICE_FALLBACK_IMAGE}
+                      alt={item.name}
+                      className="w-14 h-14 rounded-md object-cover border border-gray-200 dark:border-slate-700"
+                      onError={(e) => {
+                        e.currentTarget.src = SERVICE_FALLBACK_IMAGE;
+                      }}
+                    />
                     <div className="flex-1">
                       <h4 className="font-bold text-gray-900 dark:text-white text-sm">{item.name}</h4>
                       <p className="text-xs text-gray-600 dark:text-slate-400">{item.provider}</p>
@@ -585,6 +601,14 @@ export function EcommerceServicesPage() {
                 ✕
               </button>
             </div>
+            <img
+              src={selectedService.image || SERVICE_FALLBACK_IMAGE}
+              alt={selectedService.name}
+              className="w-full h-40 rounded-lg object-cover mb-3 border border-gray-200 dark:border-slate-700"
+              onError={(e) => {
+                e.currentTarget.src = SERVICE_FALLBACK_IMAGE;
+              }}
+            />
             <p className="text-sm text-gray-600 dark:text-slate-300 mb-3">{selectedService.description}</p>
             <div className="text-xs text-gray-500 dark:text-slate-400 space-y-1 mb-4">
               <p>Provider: {selectedService.provider}</p>

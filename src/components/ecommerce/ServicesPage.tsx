@@ -103,7 +103,7 @@ export function ServicesPage() {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Base Price</p>
-                    <p className="font-medium">₦{service.basePrice.toLocaleString()}</p>
+                    <p className="font-medium">₵{service.basePrice.toLocaleString()}</p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Duration</p>

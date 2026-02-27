@@ -157,7 +157,7 @@ export function AnalyticsPage() {
                   border: "1px solid var(--border)",
                 }}
               />
-              <Bar dataKey="revenue" fill="#8b5cf6" name="Revenue (₦)" />
+              <Bar dataKey="revenue" fill="#8b5cf6" name="Revenue (₵)" />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
